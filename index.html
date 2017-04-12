@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="generator"
+				content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>ShipTrack Visualizer</title>
+		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.34.0/mapbox-gl.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.34.0/mapbox-gl.css' rel='stylesheet' />
+		<script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
+		<link href='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
+		<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+		<link href='http://fonts.googleapis.com/css?family=Ubuntu+Condensed&amp;subset=latin,greek' rel='stylesheet' type='text/css' />
+		<script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+		<script src="jquery-ui.min.js"></script>
+		<link href="jquery-ui.css" rel="stylesheet" />
+		<link rel="stylesheet" href="marinetrafficdemotaskv0-1.css" />
+		<!-- MarkerCluster -->
+		<link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300&amp;subset=latin,greek' rel='stylesheet'
+				type='text/css' />
+		<!-- Proprietary Script -->
+		<script src="SampleData.js"></script>
+		<script src="marinetrafficdemotaskv0-1.js"></script>
+		<script src="jQDateRangeSlider-withRuler-min.js"></script>
+		<link href="iThing-min.css" rel="stylesheet" />
+		<style>
+			.mapboxgl-popup-content {background-color: black; opacity: 0.7;color: white;text-shadow: 2px 2px black; padding: 2px;}
+			.mapboxgl-popup-content td {padding: 0px;}
+			.ui-slider .ui-slider-handle {
+			position: absolute;
+			z-index: 2;
+			color: white;
+			background-color: blue;
+			width: 1em;
+			height: 1em;
+			padding: 1px;
+			cursor: default;
+			-ms-touch-action: none;
+			touch-action: none;
+			}
+			.ui-widget-content {
+			border: 1px solid #000000;
+			background: grey;
+			color: #d9d9d9;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="screenContainer">
+			<div id="mainPanel">
+				<div id="mainPanelLogo" class="embeddedLogo">
+					<img id="mainPanelLogoImg" src="images/ShipTrackLogoSmall.png" />
+				</div>
+				<div id="mainPanelMenu">
+					<div id="selectVesselPanel" hidden>	
+						<p class="optionslabel">Enter MMSI or IMO:</p>
+						<input type="text" id="selectVesselCode" size="9" maxlength="9" autocomplete="on" list="someVesselsList" >
+						</input>
+						<datalist id="someVesselsList">
+							<option value="9565039">Blue Star Delos</option>
+							<option value="9241786">Blue Star Naxos</option>
+							<option value="9208679">Nissos Mykonos</option>
+							<option value="8715259">Silja Serenade</option>
+							<option value="9375654">Viking XPRS</option>
+							<option value="8917601">Gabriella</option>
+						</datalist>
+						<button id="visualizeButton">Select</button>
+					</div>
+					<div id="selectDataPeriodPanel" hidden>	
+						<p class="optionslabel">Select Period of Data to be fetched (max 7 days):&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button id="selectDataPeriodButton">Select</button></p>
+						<div class="rangeSliderContainer">
+							<div id="rangeSliderDataPeriod"></div>
+						</div>
+					</div>
+					<div id="animateShipPanel" hidden>
+						<div>
+							<div class="sliderContainer">
+								<div id="sliderAnimation"></div>
+							</div>						
+
+							<div class="controlsRow">
+								<div class="controlItem">
+								<button id="playPauseAnim">PLAY</button>
+								</div>
+								<div class="controlItem">
+								<label id="timeIndicator">
+								</label>
+								</div>
+							</div>
+							
+							
+						</div>
+						
+
+						<div class="controlsRow">
+
+							<div class="controlItem">
+								<label style="controlsRowLabel">
+									Track Visible:
+								</label>
+								<label class="switch">
+									<input id="displayHideTrack" type="checkbox" checked></input>
+									<div class="switchSlider"></div>
+								</label>
+							</div>
+
+							<div class="controlItem">
+								<label class="controlsRowLabel">
+									Follow Ship:
+								</label>
+								<label class="switch">
+									<input id="followShip" type="checkbox"></input>
+									<div class="switchSlider"></div>
+								</label>
+							</div>
+
+							<div class="controlItem">
+								<label class="controlsRowLabel">
+									Auto Rotate Map:
+								</label>
+								<label class="switch">
+									<input id="autoRotateMap" type="checkbox"></input>
+									<div class="switchSlider"></div>
+								</label>
+							</div>
+
+						
+							
+							<div class="controlItem" style="flex: 0 0 auto;">
+								<label class="controlsRowLabel">
+									Time Scale:
+								</label>
+								<div class="sliderContainer" style="width:100px;margin-right: 10px;">
+									<div id="sliderTimeScale"></div>
+								</div>
+								<div id="timeScaleIndicator">
+								</div>
+							</div>
+
+							<div class="controlItem">
+								<label class="controlsRowLabel">
+									Dynamic Zoom:
+								</label>
+								<label class="switch">
+									<input id="dynamicZoom" type="checkbox"></input>
+									<div class="switchSlider"></div>
+								</label>
+							</div>								
+							
+
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div id="mainMenuTitle"><strong>ShipTrack Visualizer</strong></div>
+			<div id="checkData"></div>
+			<div id='map'></div>
+		</body>
+	</html>
+
+	
