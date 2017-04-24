@@ -17,11 +17,17 @@ angular.module('myApp.home', ['ngRoute'])
         /*
         The XHTTP requests are not accepted by the server, because the server does not have CORS Headers.
         I tried to overcome this using JSONP requests, but it failed.
-        There are two solutions:
-        1. Either I "reproduce" the database locally, and make requests without javascript (because the limitation is JavaScript's limitation), using PHP for example,
+        There are three possible solutions:
+        1. I reproduce the MarineTraffic API locally, and make requests without javascript (because the CORS limitation is JavaScript's limitation), using PHP for example.
+        2. I use JSONP in my requests and whitelist the domain of the MarineTraffic API
         2. The server adds CORS headers
 
-        ..more to be written about this here
+        from stackoverflow:
+        JSONP (as in "JSON with Padding") is a method commonly used to
+        bypass the cross-domain policies in web browsers (you are not
+        allowed to make AJAX requests to a webpage perceived to be on
+        a different server by the browser).
+
         */
 
         // LocationsService.GetLocations(3, '', '', 538005478, '', '', '', '', '', 'jsono', function(results) {
