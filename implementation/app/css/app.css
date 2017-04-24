@@ -5832,6 +5832,14 @@ main {
   top: 65px;
   left: 60px; }
 
+.top-right {
+  top: 80px;
+  right: 30px; }
+
+.top-right-stuck {
+  top: 10px;
+  right: 30px; }
+
 .cloud {
   padding: 15px;
   background-color: rgba(255, 255, 255, 0.8); }
