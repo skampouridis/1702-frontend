@@ -14,10 +14,20 @@ angular.module('myApp.home', ['ngRoute'])
 
     .controller('HomeCtrl', function($scope, VesselTracks, LocationsService, $http) {
 
-        LocationsService.GetLocations(3, '', '', 538005478, '', '', '', '', '', 'jsono', function(results) {
-            $scope.results = results;
-            console.log(results);
-        });
+        /*
+        The XHTTP requests are not accepted by the server, because the server does not have CORS Headers.
+        I tried to overcome this using JSONP requests, but it failed.
+        There are two solutions:
+        1. Either I "reproduce" the database locally, and make requests without javascript (because the limitation is JavaScript's limitation), using PHP for example,
+        2. The server adds CORS headers
+
+        ..more to be written about this here
+        */
+
+        // LocationsService.GetLocations(3, '', '', 538005478, '', '', '', '', '', 'jsono', function(results) {
+        //     $scope.results = results;
+        //     console.log(results);
+        // });
 
         $scope.fetchVessel = function() {
           var mmsi = parseInt($scope.mmsi);
@@ -30,8 +40,8 @@ angular.module('myApp.home', ['ngRoute'])
 
         var locations = null;
         var vesselLine = [];
-        $http.get('img/data.json').then(function(data) {
-            loadMap(data)
+        $http.get('img/data.json').then(function(data) {                        //I am using a local copy of the data retrieved from the server
+            loadMap(data)                                                        //due to the CORS limitation
         });
 
         function loadMap(data) {
@@ -113,7 +123,6 @@ angular.module('myApp.home', ['ngRoute'])
                     title: 'Some Layer'
                 }),
                 style: function(feature) {
-                    // hide geoMarker if animation is active
                     if (animating && feature.get('type') === 'geoMarker') {
                         return null;
                     }
@@ -157,7 +166,6 @@ angular.module('myApp.home', ['ngRoute'])
                     var feature = new ol.Feature(currentPoint);
                     vectorContext.drawFeature(feature, styles.geoMarker);
                 };
-                // tell OpenLayers to continue the postcompose animation
                 map.render();
             };
 
@@ -170,10 +178,7 @@ angular.module('myApp.home', ['ngRoute'])
                     now = new Date().getTime();
                     speed = speedInput.value;
                     startButton.textContent = 'Cancel Animation';
-                    // hide geoMarker
                     geoMarker.setStyle(null);
-                    // just in case you pan somewhere else
-                    // map.getView().setCenter([23, 38]);
                     map.on('postcompose', moveFeature);
                     map.render();
                 }
@@ -182,12 +187,10 @@ angular.module('myApp.home', ['ngRoute'])
             function stopAnimation(ended) {
                 animating = false;
                 startButton.textContent = 'Start Animation';
-                // if animation cancelled set the marker at the beginning
                 var coord = ended ? routeCoords[routeLength - 1] : routeCoords[0];
                 /** @type {ol.geom.Point} */
                 (geoMarker.getGeometry())
                 .setCoordinates(coord);
-                //remove listener
                 map.un('postcompose', moveFeature);
             }
 

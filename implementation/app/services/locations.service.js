@@ -1,3 +1,14 @@
+/*
+As explained in homectrl.js, I am trying to make a call using JSONP
+because the server does not allow cross origin requests.
+
+from stackoverflow:
+JSONP (as in "JSON with Padding") is a method commonly used to
+bypass the cross-domain policies in web browsers (you are not
+allowed to make AJAX requests to a webpage perceived to be on
+a different server by the browser).
+*/
+
 function log_result(data) {
   console.log(data);
 }
