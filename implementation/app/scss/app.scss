@@ -20,7 +20,7 @@ main {
     height: 30px;
 }
 
-.dmap {
+.map {
         height: $viewport-height;
         width: 100%;
     }
@@ -28,6 +28,7 @@ main {
 .overmap {
     position: absolute;
     z-index: 1;
+    width: 30%;
 }
 
 .top-left {

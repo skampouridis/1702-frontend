@@ -7,7 +7,7 @@ var myApp = angular.module('myApp', [
     'myApp.home'
 ]);
 
-myApp.config(function($stateProvider, $urlRouterProvider, $sceDelegateProvider) {
+myApp.config(function($stateProvider, $urlRouterProvider, $sceDelegateProvider, $sceProvider) {
     $urlRouterProvider.otherwise('/home');
 
     $sceDelegateProvider.resourceUrlWhitelist([
@@ -15,9 +15,10 @@ myApp.config(function($stateProvider, $urlRouterProvider, $sceDelegateProvider) 
       'self',
       // Allow loading from our assets domain.  Notice the difference between * and **.
       'http://services.marinetraffic.com/api/**']);
+
 });
 
-myApp.controller('AppCtrl', function($scope, $log, $state, $rootScope, $location) {
+myApp.controller('AppCtrl', function($scope, $log, $state, $rootScope, $location, $sce) {
     $scope.$state = $state;
     $scope.fullDate = "MMM dd, y 'at' HH:mm:ss";
     $scope.stamenTiles = new ol.layer.Tile({
@@ -25,4 +26,6 @@ myApp.controller('AppCtrl', function($scope, $log, $state, $rootScope, $location
             layer: 'terrain'
         })
     });
+    $sce.trustAsResourceUrl('http://services.marinetraffic.com/api/**');
+
 });

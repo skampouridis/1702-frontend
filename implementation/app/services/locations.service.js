@@ -18,15 +18,7 @@ angular.module('myApp')
             if (typeof MAXLON == 'number') parameters=parameters.concat('/MAXLON:', MAXLON.toString());
             if (protocol.length>0) parameters=parameters.concat('/protocol:', protocol);
             var formatUrl = WebService.Endpoint('/exportvesseltrack').concat(parameters);
-            $http({
-                method: "JSONP",
-                url: formatUrl,
-            }).then(function successCallback(response) {
-                var locations = response.data;
-                callback(locations);
-            }, function errorCallback(response) {
-                console.log(response);
-            });
+            $http.jsonp(formatUrl, {jsonpCallbackParam: 'log_result'});
         }
         return service;
     }]);
