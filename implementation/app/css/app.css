@@ -5808,7 +5808,7 @@ button.close {
   .hidden-print {
     display: none !important; } }
 body {
-  padding-top: 100px;
+  padding-top: 50px;
   background-color: rgba(240, 240, 240, 0.84); }
 
 main {
@@ -5819,5 +5819,25 @@ main {
 
 .separator {
   height: 30px; }
+
+.dmap {
+  height: 92vh;
+  width: 100%; }
+
+.overmap {
+  position: absolute;
+  z-index: 1; }
+
+.top-left {
+  top: 65px;
+  left: 60px; }
+
+.cloud {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.8); }
+
+.thick-cloud {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.9); }
 
 /*# sourceMappingURL=app.css.map */

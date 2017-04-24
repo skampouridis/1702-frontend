@@ -1,8 +1,8 @@
 @import 'https://fonts.googleapis.com/css?family=Open+Sans:400,700&subset=greek';
 @import "customVariables";
 @import "../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
-$navbar-height: 100px;
-$viewport-height: 91vh;
+$navbar-height: 50px;
+$viewport-height: 92vh;
 
 body {
     padding-top: $navbar-height;
@@ -18,4 +18,29 @@ main {
 
 .separator {
     height: 30px;
+}
+
+.dmap {
+        height: $viewport-height;
+        width: 100%;
+    }
+
+.overmap {
+    position: absolute;
+    z-index: 1;
+}
+
+.top-left {
+    top: 65px;
+    left: 60px;
+}
+
+.cloud {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.80);
+}
+
+.thick-cloud {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.90);
 }

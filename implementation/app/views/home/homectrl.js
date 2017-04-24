@@ -18,4 +18,15 @@ angular.module('myApp.home', ['ngRoute'])
             $scope.results = results;
             console.log(results);
         });
+
+        var map = new ol.Map({
+            target: 'map',
+            layers: [$scope.stamenTiles],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([23,38]),
+                zoom: 7,
+                minZoom: 0,
+                maxZoom: 22
+            })
+        });
     });

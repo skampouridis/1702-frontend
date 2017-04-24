@@ -14,4 +14,9 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
 myApp.controller('AppCtrl', function($scope, $log, $state, $rootScope, $location) {
     $scope.$state = $state;
     $scope.fullDate = "MMM dd, y 'at' HH:mm:ss";
+    $scope.stamenTiles = new ol.layer.Tile({
+        source: new ol.source.Stamen({
+            layer: 'terrain'
+        })
+    });
 });
