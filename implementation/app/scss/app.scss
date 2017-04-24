@@ -1,0 +1,21 @@
+@import 'https://fonts.googleapis.com/css?family=Open+Sans:400,700&subset=greek';
+@import "customVariables";
+@import "../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
+$navbar-height: 100px;
+$viewport-height: 91vh;
+
+body {
+    padding-top: $navbar-height;
+    background-color: rgba(240, 240, 240, 0.84);
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.separator {
+    height: 30px;
+}

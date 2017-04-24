@@ -1,0 +1,4 @@
+# Ignore sass-generated content
+# app.css
+# app.css.map
+# don't ignore them for the demonstration
