@@ -14,14 +14,27 @@ angular.module('myApp.home', ['ngRoute'])
 
     .controller('HomeCtrl', function($scope, VesselTracks, LocationsService, $http) {
 
-        // LocationsService.GetLocations(3, '', '', 219291000, '', '', '', '', '', 'jsono', function(results) {
-        //     $scope.results = results;
-        //     console.log(results);
-        // });
+        LocationsService.GetLocations(3, '', '', 538005478, '', '', '', '', '', 'jsono', function(results) {
+            $scope.results = results;
+            console.log(results);
+        });
+
+        $scope.fetchVessel = function() {
+          var mmsi = parseInt($scope.mmsi);
+          LocationsService.GetLocations(3, '', '', mmsi, '', '', '', '', '', 'jsono', function(results) {
+              $scope.results = results;
+              console.log(results);
+              // loadMap(results);
+          });
+        };
 
         var locations = null;
         var vesselLine = [];
         $http.get('img/data.json').then(function(data) {
+            loadMap(data)
+        });
+
+        function loadMap(data) {
             locations = data.data;
             console.log(locations);
 
@@ -178,10 +191,6 @@ angular.module('myApp.home', ['ngRoute'])
                 map.un('postcompose', moveFeature);
             }
 
-            $scope.centerMap = function() {
-                map.getView().setCenter(ol.proj.fromLonLat([23, 38]));
-                map.getView().setZoom(3);
-            };
-        });
+        };
 
     });

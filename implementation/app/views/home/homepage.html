@@ -1,16 +1,23 @@
 <div id="map" class="map">
     <div id='controls' class='overmap top-left thick-cloud'>
         <h4>Controls</h4>
+        <form ng-submit="fetchVessel()" id='new-vessel'>
+          <div class="input-group">
+              <span class="input-group-addon">MMSI</span>
+              <input type="text" class="form-control" placeholder="MMSI" aria-describedby="MMSI" ng-model="mmsi">
+          </div>
+          <div class="separator">
+          </div>
+          <button type="submit" class="btn btn-default pull-right">SHOW VESSEL</button>
+          <div class="separator"></div>
+        </form>
+        <div class="separator"></div>
         <div class="input-group">
             <span class="input-group-addon">Speed</span>
             <input id="speed" type="range" class="form-control" min="5" max="100" step="2" value="60">
         </div>
         <div class="separator">
-
         </div>
         <button class="btn btn-default pull-right" id="start-animation" ng-click="startAnimation()">Start Animation</button>
-    </div>
-    <div class='overmap top-right'>
-        <button type="button" class="btn btn-primary" ng-click='centerMap()'><i class="fa fa-dot-circle-o" aria-hidden="true"></i></button>
     </div>
 </div>
