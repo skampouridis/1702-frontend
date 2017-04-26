@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="MTTrackingApi">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Marine traffic - Tracking ApiV</title>
+
+        <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="styles/myStyles.css" rel="stylesheet">
+
+    </head>
+
+    <body ng-controller="LandingPageController">
+        <div id="wrapper">
+            <div id="sidebar-wrapper">
+                <div ui-view="sidebar"></div>
+            </div>
+
+            <div id="page-content-wrapper" class="light-gray-background container">
+                <div class="page-content ui-view-container">
+                    <div ui-view="landingPage" class="well"></div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- JS SCRIPTS -->
+        <script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
+        <script type="text/javascript" src="../bower_components/angular-route/angular-route.js"></script>
+        <script type="text/javascript" src="../bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+        <script type="text/javascript" src="../bower_components/angular-animate/angular-animate.js"></script>
+        <script type="text/javascript" src="scripts/lodash.js"></script>
+        <script type="text/javascript" src="scripts/angular-simple-logger.js"></script>
+        <script type="text/javascript" src="../bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
+
+        <script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
+
+        <script type="text/javascript" src="app.js"></script>
+        <script type="text/javascript" src="controllers/LandingPageController.js"></script>
+        <script type="text/javascript" src="services/ApiCallService.js"></script>
+
+    </body>
+    
+
+</html>

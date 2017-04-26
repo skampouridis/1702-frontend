@@ -8,3 +8,12 @@ Vary the waypoints rendered by zoom level so that the visible waypoints do not o
 The user must be able to control animation speed as well as select a point in time. Develop the application on Javascript. Utilizing suitable frameworks is advisable.
 
 Stage your solution on a demo page, fork this repo and create a pull request that contains your implementation in a subfolder.
+
+
+
+Notes:
+
+Develop using Angular JS
+
+Decide which map api should i use
+
