@@ -1,6 +1,9 @@
 .white-font{
     color: #ffffff;
 }
+.black-font{
+    color: black;
+}
 .grey-font{
     color: rgb(109, 106, 106);
 }
@@ -354,6 +357,11 @@ ul.lower-roman {
 .padding-top-10px{
     padding-top: 10px;
 }
+
+.padding-top-15px{
+    padding-top: 15px;
+}
+
 .padding-top-bottom-10px{
     padding: 10px 0px;
 }
@@ -584,6 +592,11 @@ ul.lower-roman {
 }
 
 .angular-google-map-container { height: 600px; }
+
+.map {
+    height: 100%;
+    width: 100%;
+}
 
 @media only screen and (min-width: 1200px){
     .info li {

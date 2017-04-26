@@ -10,6 +10,7 @@
         <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
         <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://openlayers.org/en/v4.1.0/css/ol.css" type="text/css">
         <link href="styles/myStyles.css" rel="stylesheet">
 
     </head>
@@ -20,9 +21,9 @@
                 <div ui-view="sidebar"></div>
             </div>
 
-            <div id="page-content-wrapper" class="light-gray-background container">
+            <div id="page-content-wrapper" class="light-gray-background container padding-top-15px">
                 <div class="page-content ui-view-container">
-                    <div ui-view="landingPage" class="well"></div>
+                    <div ui-view="landingPage" class="well no-padding"></div>
                 </div>
             </div>
         </div>
@@ -38,13 +39,15 @@
         <script type="text/javascript" src="scripts/angular-simple-logger.js"></script>
         <script type="text/javascript" src="../bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
 
-        <script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
+        <!--<script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>-->
+        <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+        <script src="https://openlayers.org/en/v4.1.0/build/ol.js"></script>
 
         <script type="text/javascript" src="app.js"></script>
         <script type="text/javascript" src="controllers/LandingPageController.js"></script>
         <script type="text/javascript" src="services/ApiCallService.js"></script>
 
     </body>
-    
+
 
 </html>

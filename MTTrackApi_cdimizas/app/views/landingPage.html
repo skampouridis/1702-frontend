@@ -1,0 +1,30 @@
+<!------ LANDING PAGE --------------------------->
+<section id="landingPage" class="margin-top-28px">
+    <div class=" no-padding-L-R home-background container">
+
+        <div class="row padding-L-R-20px">
+            <div class="col-xs-12 col-sm-12 ">
+
+                <!-- MAP -->
+                <!--<div class="angular-google-map-container">-->
+                    <!--<ui-gmap-google-map center='map.center' zoom='map.zoom'>-->
+                        <!--<ui-gmap-markers models="randomMarkers" coords="'self'" icon="'icon'">-->
+                        <!--</ui-gmap-markers>-->
+                        <!--<ui-gmap-polyline ng-repeat="p in polylines" path="p.path" stroke="p.stroke" visible='p.visible'-->
+                                          <!--geodesic='p.geodesic' fit="false" editable="p.editable" draggable="p.draggable" icons='p.icons'></ui-gmap-polyline>-->
+                    <!--</ui-gmap-google-map>-->
+                <!--</div>-->
+
+                <h3>Open Layers</h3>
+                <div id="map" class="map"></div>
+
+                <label for="speed">
+                    speed:&nbsp;
+                    <input id="speed" type="range" min="10" max="999" step="10" value="60">
+                </label>
+                <button ng-click="startAnimation()" class="black-font">{{animationButtonTitle}}</button>
+
+            </div>
+        </div>
+    </div>
+</section>

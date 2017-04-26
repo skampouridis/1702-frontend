@@ -11,9 +11,3 @@ Stage your solution on a demo page, fork this repo and create a pull request tha
 
 
 
-Notes:
-
-Develop using Angular JS
-
-Decide which map api should i use
-
