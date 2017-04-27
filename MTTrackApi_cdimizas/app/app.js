@@ -1,7 +1,8 @@
-'use strict';
+
 var $stateProviderRef = null;
 (function () {
-    angular.module('MTTrackingApi', ['ui.router', 'ngAnimate', 'ngRoute', 'uiGmapgoogle-maps']);
+  'use strict';
+    angular.module('MTTrackingApi', ['ui.router', 'ngAnimate', 'ngRoute', 'leaflet-directive']);
     angular.module('MTTrackingApi')
         .config(
             function($stateProvider, $urlRouterProvider) {
@@ -22,7 +23,6 @@ var $stateProviderRef = null;
                             }
                         }
                     });
-
             }
         )
 })();
