@@ -1,14 +1,95 @@
-<!------ LANDING PAGE --------------------------->
-<section id="landingPage" class="margin-top-28px">
-    <div class=" no-padding-L-R home-background container">
 
-        <div class="row padding-L-R-20px">
-            <div class="col-xs-12 col-sm-12 ">
-                <!--LeafletJS-->
-                <leaflet lf-center="leafletObj.athens" width="100%" height="500px"></leaflet>
 
-                <pre>{{}}</pre>
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <div id="nav" class="navbar navbar-inverse navbar-static-top" role="navigation">
+
+            <div class="home-box col-xs-12 col-sm-12">
+                <div>
+                    <img src="images/photo.jpg" alt="Marine Traffic image">
+                    <h3 class="white-font">Tracking App</h3>
+                </div>
+            </div>
+            <div class="padding-L-R-15px" >
+                <!--id="navbar" class="navbar-collapse"-->
+                <!--TODO - ADD SELECT DAYS ELEMENT-->
+                <br>
+                <br>
+                <br>
+                <label>Days</label>
+                <select ng-model="selectDaysModel"
+                        ng-disabled="loadingVesselTrackingData"
+                        ng-change="selectDays.change()"
+                        ng-options="day.id as day.name for day in selectDays.list"
+                        class="grey-font">
+                </select>
+                <br>
+                <br>
+                <br>
+                <label>MMSI</label>
+                <select ng-model="selectMMSIModel"
+                        ng-disabled="loadingVesselTrackingData"
+                        ng-change="selectMMSI.change()"
+                        ng-options="m.id as m.mmsi for m in selectMMSI.list"
+                        class="grey-font">
+                </select>
+            </div>
+
+
+            <div class="social">
+                <ul>
+                    <li>
+                        <a href="https://github.com/christos-dimizas" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://gr.linkedin.com/in/christos-dimizas-baa88348" target="_blank">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-</section>
+
+    <div id="page-content-wrapper" class="light-gray-background container padding-top-15px">
+        <div class="page-content ui-view-container">
+            <div class="well no-padding">
+                <section id="landingPage" class="margin-top-28px">
+                    <div class=" no-padding-L-R home-background container">
+
+                        <div class="row padding-L-R-20px">
+                            <div class="col-xs-12 col-sm-12 ">
+                                <!--LeafletJS-->
+                                <leaflet lf-center="leafletObj.athens" width="100%" height="500px"></leaflet>
+                                <pre>{{vesselTrack.list | json }}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!------ LANDING PAGE --------------------------->
+

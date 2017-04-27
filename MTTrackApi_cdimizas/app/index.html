@@ -16,18 +16,7 @@
     </head>
 
     <body ng-controller="LandingPageController">
-        <div id="wrapper">
-            <div id="sidebar-wrapper">
-                <div ui-view="sidebar"></div>
-            </div>
-
-            <div id="page-content-wrapper" class="light-gray-background container padding-top-15px">
-                <div class="page-content ui-view-container">
-                    <div ui-view="landingPage" class="well no-padding"></div>
-                </div>
-            </div>
-        </div>
-        <div id="mapid" class="map"></div>
+        <div ui-view="landingPage"></div>
 
 
         <!-- JS SCRIPTS -->
@@ -46,6 +35,7 @@
         <!-- Services -->
         <script type="text/javascript" src="services/LeafletService.js"></script>
         <script type="text/javascript" src="services/ApiCallService.js"></script>
+        <script type="text/javascript" src="services/RequestService.js"></script>
         <!-- Controllers -->
         <script type="text/javascript" src="controllers/LandingPageController.js"></script>
 
