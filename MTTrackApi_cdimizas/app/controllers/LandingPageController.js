@@ -2,9 +2,9 @@
 (function () {
     'use strict';
     angular.module('MTTrackingApi').controller('LandingPageController', LandingPageController);
-    LandingPageController.$inject = ['$scope', 'ApiCallService', 'LeafletService'];
+    LandingPageController.$inject = ['$scope', 'ApiCallService', 'LeafletService', 'leafletBoundsHelpers'];
     // HOME PAGE
-    function LandingPageController($scope, ApiCallService, LeafletService) {
+    function LandingPageController($scope, ApiCallService, LeafletService, leafletBoundsHelpers) {
 
 
         /*************************
@@ -62,13 +62,16 @@
         };
 
         // Leaflet Map
+        var initMapCenter = {
+            lat:37.9781853,
+            lng:23.7312262,
+            zoom: 12
+        };
         $scope.leafletObj = {
-            center:{
-                lat:37.9781853,
-                lng:23.7312262,
-                zoom: 12
-            },
-            markers : {}
+            center:angular.copy(initMapCenter),
+            markers : {},
+            path: {},
+            bounds: {}
         };
 
 
@@ -98,8 +101,25 @@
 
         $scope.addMarkersTMap = function () {
             // TODO - Find Center (on animation the center will be the next marker)
-            $scope.leafletObj.center = setMapCenter($scope.vesselTrack.list[0]);
-            $scope.leafletObj.markers = createMapMarkersList($scope.vesselTrack.list);
+            // TODO - The loaded on map markers will depend on zoom level
+            // $scope.leafletObj.center  = LeafletService.setMapCenter($scope.vesselTrack.list[0]);
+            $scope.leafletObj.markers = LeafletService.createMapMarkersList($scope.vesselTrack.list);
+            setBoundsToMap();
+        };
+
+        $scope.addPathToMap = function () {
+            $scope.leafletObj.path    = LeafletService.createPathList($scope.vesselTrack.list);
+            setBoundsToMap();
+        };
+
+        $scope.removeMarkers = function () {
+            $scope.leafletObj.center  = initMapCenter;
+            $scope.leafletObj.markers = {};
+        };
+
+        $scope.removePath = function () {
+            $scope.leafletObj.center  = initMapCenter;
+            $scope.leafletObj.path = {};
         };
 
 
@@ -107,34 +127,10 @@
          * GENERAL FUNCTIONS
          *************************/
 
-        // prepare marker object and add it to directive attribute
-        function prepareMarketObl(currentLocationData){
-            var tooltip = "Speed: "+currentLocationData.SPEED+
-                " Course: " + currentLocationData.COURSE +
-                " At Time: " + new Date(currentLocationData.TIMESTAMP);
-            return {
-                lat: Number(currentLocationData.LAT),
-                lng: Number(currentLocationData.LON),
-                message: tooltip
-            };
+        function setBoundsToMap(){
+            var boundsArray = LeafletService.setMapBounds($scope.vesselTrack.list);
+            $scope.leafletObj.bounds  = leafletBoundsHelpers.createBoundsFromArray(boundsArray);
         }
-
-        function setMapCenter(currentLocationData){
-            return {
-                lat:Number(currentLocationData.LAT),
-                lng:Number(currentLocationData.LON),
-                zoom: 3
-            }
-        }
-
-        function createMapMarkersList(markers){
-            var mapObjMarkers = [];
-            for(var i=0; i<markers.length; i++){
-                var markerName = "m"+(i+1);
-                mapObjMarkers[markerName] = prepareMarketObl(markers[i]);
-                // mapObjMarkers.push(prepareMarketObl(markers[i]));
-            }
-            return mapObjMarkers;
-        }
+        // TODO - ON ZOOM LEVEL DO NOT PRINT ALL MARKERS
     }
 })();

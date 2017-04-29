@@ -15,8 +15,9 @@ as waypoints, which present a tooltip with information like
    - timestamp.
 Vary the waypoints rendered by zoom level so that the visible waypoints do not overlap.
 Animation should take vessel speed, true heading and starting time variation in account.
-The user must be able to control animation speed as well as select a point in time. Develop the application on
-Javascript.
+The user must be able to control animation speed as well as select a point in time.
+
+Develop the application on Javascript.
 
 Utilizing suitable frameworks is advisable.
 
