@@ -114,9 +114,11 @@
                                          markers="leafletObj.markers"
                                          lf-center="leafletObj.center"
                                          bounds="leafletObj.bounds"
+                                         defaults="leafletObj.defaults"
                                          width="100%"
                                          height="500px">
                                 </leaflet>
+                                {{leafletObj.center.zoom}}
                                 <!--<pre>{{vesselTrack.list | json }}</pre>-->
                             </div>
                         </div>

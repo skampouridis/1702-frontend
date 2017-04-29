@@ -42,8 +42,11 @@
                 {
                     id:40,
                     name: "40 Days"
+                },
+                {
+                    id:100,
+                    name: "100 Days"
                 }
-
             ],
             change: function () {
                 $scope.updateVesselTrack($scope.selectDaysModel, $scope.selectMMSIModel);
@@ -62,13 +65,14 @@
         };
 
         // Leaflet Map
-        var initMapCenter = {
-            lat:37.9781853,
-            lng:23.7312262,
-            zoom: 12
-        };
         $scope.leafletObj = {
-            center:angular.copy(initMapCenter),
+            center:{ lat: 37.9781853,
+                lng: 23.7312262,
+                zoom: 3
+            },
+            defaults: {
+                // scrollWheelZoom: false
+            },
             markers : {},
             path: {},
             bounds: {}
@@ -104,23 +108,30 @@
             // TODO - The loaded on map markers will depend on zoom level
             // $scope.leafletObj.center  = LeafletService.setMapCenter($scope.vesselTrack.list[0]);
             $scope.leafletObj.markers = LeafletService.createMapMarkersList($scope.vesselTrack.list);
-            setBoundsToMap();
+            // setBoundsToMap();
         };
 
         $scope.addPathToMap = function () {
             $scope.leafletObj.path    = LeafletService.createPathList($scope.vesselTrack.list);
-            setBoundsToMap();
+            // setBoundsToMap();
         };
 
         $scope.removeMarkers = function () {
-            $scope.leafletObj.center  = initMapCenter;
+            $scope.leafletObj.center  = resetMapCenter();
             $scope.leafletObj.markers = {};
         };
 
         $scope.removePath = function () {
-            $scope.leafletObj.center  = initMapCenter;
+            $scope.leafletObj.center  = resetMapCenter();
             $scope.leafletObj.path = {};
         };
+
+
+        //bind locationGrid to zoom level
+        $scope.$watch("leafletObj.center.zoom", function (zoom) {
+            // TODO
+            // if zoom level x then ...
+        });
 
 
         /*************************
@@ -131,6 +142,16 @@
             var boundsArray = LeafletService.setMapBounds($scope.vesselTrack.list);
             $scope.leafletObj.bounds  = leafletBoundsHelpers.createBoundsFromArray(boundsArray);
         }
+
+        function resetMapCenter(){
+            return{
+                lat:37.9781853,
+                lng:23.7312262,
+                zoom: 12
+            };
+        }
+
+
         // TODO - ON ZOOM LEVEL DO NOT PRINT ALL MARKERS
     }
 })();

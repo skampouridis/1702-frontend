@@ -21,16 +21,26 @@
                 " Course: " + currentLocationData.COURSE +
                 " At Time: " + new Date(currentLocationData.TIMESTAMP);
             return {
-                lat: Number(currentLocationData.LAT),
-                lng: Number(currentLocationData.LON),
-                message: tooltip
+                lat: parseFloat(currentLocationData.LAT),
+                lng: parseFloat(currentLocationData.LON),
+                message: tooltip,
+                iconAngle:parseFloat(currentLocationData.HEADING),
+                icon:{
+                    iconUrl: 'images/Ship-icon.png',
+                    iconSize:     [38, 38], // size of the icon
+                    iconAnchor:   [22, 38], // point of the icon which will correspond to marker's location
+                    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+                    // shadowUrl: 'img/leaf-shadow.png',
+                    // shadowSize:   [50, 64], // size of the shadow
+                    // shadowAnchor: [4, 62],  // the same for the shadow
+                }
             };
         }
 
         function _setMapCenter(currentLocationData){
             return {
-                lat:Number(currentLocationData.LAT),
-                lng:Number(currentLocationData.LON),
+                lat:parseFloat(currentLocationData.LAT),
+                lng:parseFloat(currentLocationData.LON),
                 zoom: 8
             }
         }
@@ -47,15 +57,15 @@
 
         function _setMapBounds(LocationListData) {
             return [
-                [Number(LocationListData[0].LAT), Number(LocationListData[0].LON)],
-                [Number(LocationListData[LocationListData.length-1].LAT), Number(LocationListData[LocationListData.length-1].LON)]
+                [parseFloat(LocationListData[0].LAT), parseFloat(LocationListData[0].LON)],
+                [parseFloat(LocationListData[LocationListData.length-1].LAT), parseFloat(LocationListData[LocationListData.length-1].LON)]
             ];
         }
 
         function _createPathList(LocationListData){
             var path = {
                 p1:{
-                    color: 'red',
+                    color: 'green',
                     weight: 4,
                     message: "<h5>Route</h5>",
                     latlngs: []
@@ -64,8 +74,8 @@
 
             for(var i=0; i<LocationListData.length; i++){
                 path.p1.latlngs.push({
-                    lat:Number(LocationListData[i].LAT),
-                    lng:Number(LocationListData[i].LON)
+                    lat:parseFloat(LocationListData[i].LAT),
+                    lng:parseFloat(LocationListData[i].LON)
                 });
             }
             return path;
