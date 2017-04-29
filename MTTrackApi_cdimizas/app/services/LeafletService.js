@@ -6,7 +6,7 @@
     function LeafletService() {
 		// TODO
         var services = {
-            // prepareMarketObl : _prepareMarketObl,
+            prepareMarketObl      : _prepareMarketObl,
             setMapCenter          : _setMapCenter,
             createMapMarkersList  : _createMapMarkersList,
             createPathList        : _createPathList,

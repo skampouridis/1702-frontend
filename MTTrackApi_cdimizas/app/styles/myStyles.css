@@ -214,8 +214,8 @@ ul.nav.navbar-nav li {
 }
 
 .home-box img {
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     border: 1px solid rgba(0,0,0,.3);
     border-radius: 50%;
 }
@@ -462,6 +462,10 @@ ul.lower-roman {
     margin-right: 30px;
 }
 
+.red-background{
+    background: #d9534f !important;
+}
+
 /*************** /CONTENT *****************/
 
 
@@ -663,6 +667,11 @@ ul.lower-roman {
 
 .opacity-dot-4{
     opacity: 0.4;
+}
+
+.animation-title{
+    font-weight: 700;
+    color: white;
 }
 
 @media only screen and (min-width: 1200px){

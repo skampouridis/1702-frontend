@@ -24,7 +24,7 @@
                     </select>
                 </div>
                 <!-- Select MMSI -->
-                <div class="margin-bottom-100px text-align-center">
+                <div class="margin-bottom-30px text-align-center">
                     <label>MMSI</label>
                     <select ng-model="selectMMSIModel"
                             ng-disabled="loadingVesselTrackingData"
@@ -37,7 +37,8 @@
                 <!-- Buttons -->
                 <div class="margin-bottom-30px text-align-center">
                     <!-- Add markers -->
-                    <div class="row no-padding-L-R" ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
+                    <div class="row no-padding-L-R"
+                         ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
                         <div class="col-xs-12 col-sm-9 no-padding-right">
                             <button class="action-buttons-style width-100per"
                                     ng-disabled="vesselTrack.list.length==0"
@@ -46,7 +47,7 @@
                         </div>
 
                         <div class="col-xs-12 col-sm-3 no-padding-left">
-                            <button class="action-buttons-style width-100per"
+                            <button class="action-buttons-style width-100per red-background"
                                     ng-disabled="vesselTrack.list.length==0"
                                     ng-click="removeMarkers()">
                                 <i class="fa fa-times"></i>
@@ -55,7 +56,8 @@
                     </div>
                     <br>
                     <!-- Add path -->
-                    <div class="row no-padding-L-R" ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
+                    <div class="row no-padding-L-R"
+                         ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
                         <div class="col-xs-12 col-sm-9 no-padding-right">
                             <button class="action-buttons-style width-100per"
                                     ng-disabled="vesselTrack.list.length==0"
@@ -64,13 +66,56 @@
                         </div>
 
                         <div class="col-xs-12 col-sm-3 no-padding-left">
-                            <button class="action-buttons-style width-100per"
+                            <button class="action-buttons-style width-100per red-background"
                                     ng-disabled="vesselTrack.list.length==0"
                                     ng-click="removePath()">
                                 <i class="fa fa-times"></i>
                             </button>
                         </div>
                     </div>
+                    <br>
+                    <!-- Start, Stop trip -->
+                    <div class="row no-padding-L-R"
+                         ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
+                        <h4 class="animation-title">Trip Animation</h4>
+                        <!-- Start trip -->
+                        <div class="col-xs-12 col-sm-3 col-sm-offset-1">
+                            <button class="action-buttons-style width-100per"
+                                    ng-class="vesselTrack.list.length==0 || tripStarted?'opacity-dot-4':''"
+                                    ng-disabled="vesselTrack.list.length==0 || tripStarted"
+                                    ng-click="startTrip()">
+                                <i class="fa fa-play" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <!-- Pause trip -->
+                        <div class="col-xs-12 col-sm-3">
+                            <button class="action-buttons-style width-100per"
+                                    ng-class="!tripStarted?'opacity-dot-4':''"
+                                    ng-disabled="vesselTrack.list.length==0 || !tripStarted"
+                                    ng-click="pauseTrip()">
+                                <i class="fa fa-pause" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <!-- Stop trip -->
+                        <div class="col-xs-12 col-sm-3">
+                            <button class="action-buttons-style width-100per"
+                                    ng-class="!tripStarted?'opacity-dot-4':''"
+                                    ng-disabled="vesselTrack.list.length==0 || !tripStarted"
+                                    ng-click="cancelTrip()">
+                                <i class="fa fa-stop" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div ng-if="tripStarted" class="row no-padding-L-R">
+                        <span id="percentage">{{getPercentage()}}%</span>
+                        <!--<div class="col-xs-12 col-sm-12 progress-bar progress-bar-warning"-->
+                             <!--role="progressbar" aria-valuenow="{{getPercentage()}}" aria-valuemin="0"-->
+                             <!--aria-valuemax="100" ng-style="{width : ( getPercentage() + '%' ) }">-->
+                            <!--<span class="sr-only">{{getPercentage()}}% Complete (warning)</span>-->
+                        <!--</div>-->
+                    </div>
+                   
                 </div>
             </div>
 
@@ -118,8 +163,6 @@
                                          width="100%"
                                          height="500px">
                                 </leaflet>
-                                {{leafletObj.center.zoom}}
-                                <!--<pre>{{vesselTrack.list | json }}</pre>-->
                             </div>
                         </div>
                     </div>
