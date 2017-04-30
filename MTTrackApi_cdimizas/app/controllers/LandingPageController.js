@@ -12,12 +12,24 @@
          *************************/
 
         var startTheTrip = null;
-        var count = 0;
+        var objCounter = 0;
+
 
         // models
         $scope.tripStarted = false;
         $scope.selectDaysModel = null;
+        $scope.animationStep = 1;
+        $scope.count = 0;
         $scope.selectMMSIModel = 219291000;
+
+        $scope.slider = {
+            // value: 1,
+            options: {
+                floor: 1,
+                ceil: 100
+            }
+        };
+
         $scope.vesselTrack = {
             shipId: null,
             list: []
@@ -78,11 +90,16 @@
                 // scrollWheelZoom: false
             },
             markers : {},
-            path: {},
+            path: {
+                p1:{
+                    color: 'green',
+                    weight: 4,
+                    message: "<h5>Route</h5>",
+                    latlngs: []
+                }
+            },
             bounds: {}
         };
-
-
 
         /*************************
          * SCOPE FUNCTIONS
@@ -134,8 +151,17 @@
         $scope.startTrip = function () {
             $scope.tripStarted = true;
             startTheTrip = $interval(function() {
-                startAddingMarkers($scope.vesselTrack.list)
-            }, 1000);
+                if($scope.count<$scope.vesselTrack.list.length){
+                    addOneMarkerToMap($scope.vesselTrack.list[$scope.count]);
+                    addPathToMap($scope.vesselTrack.list[$scope.count]);
+                    setBoundsBetweenExistingMarkers($scope.leafletObj.markers);
+                }else{
+                    $interval.cancel(startTheTrip);
+                }
+                console.log("Markers set: " + $scope.count + "/" + $scope.vesselTrack.list.length);
+                $scope.count = $scope.count + $scope.animationStep;
+                // $scope.count++;
+            }, 1500);
         };
 
         $scope.pauseTrip = function () {
@@ -145,9 +171,11 @@
         };
 
         $scope.cancelTrip = function () {
-            count = 0;
+            $scope.count = 0;
+            objCounter = 0;
             $scope.tripStarted = false;
             $scope.leafletObj.markers = [];
+            $scope.leafletObj.path.latlngs = [];
             $interval.cancel(startTheTrip);
         };
 
@@ -161,7 +189,11 @@
         $scope.threshold = 15000;
 
         $scope.getPercentage = function () {
-            return ((count / $scope.total)*100).toFixed(2);
+            var progress = ($scope.count / $scope.total)*100;
+            if($scope.count>=$scope.total){
+                progress = 100;
+            }
+            return progress.toFixed(2);
         };
         $scope.getTotal = function () {
             return $scope.total;
@@ -177,6 +209,11 @@
             $scope.leafletObj.bounds  = leafletBoundsHelpers.createBoundsFromArray(boundsArray);
         }
 
+        function setBoundsBetweenExistingMarkers(markersList){
+            var boundsArray = LeafletService.setMapBoundsFromMarkerObj(markersList);
+            $scope.leafletObj.bounds  = leafletBoundsHelpers.createBoundsFromArray(boundsArray)
+        }
+
         function resetMapCenter(){
             return{
                 lat:37.9781853,
@@ -185,53 +222,18 @@
             };
         }
 
-        function calculateSpeedIntervals(LocationListData){
-            var speeds = [];
-            for(var i=0; i<LocationListData.length; i++){
-                var next = i+1;
-                if(next<LocationListData.length){
-                    var dt = getTimeInterval(LocationListData[next].TIMESTAMP, "minutes") - getTimeInterval(LocationListData[i].TIMESTAMP, "minutes");
-                    var dlat = parseFloat(LocationListData[next].LAT) - parseFloat(LocationListData[i].LAT);
-                    var s = parseFloat(dlat/dt);
-                    speeds.push(s);
-                }
-            }
-            return speeds;
+        function addOneMarkerToMap(currentLocationData){
+            var markerName = "m"+(objCounter+1);
+            $scope.leafletObj.markers[markerName] = LeafletService.prepareMarketObl(currentLocationData);
+            objCounter++;
         }
 
-        function getTimeInterval(timeString, timeIntervalCase){
-            var seconds = 1000;
-            var minutes = seconds * 60;
-            var hours = minutes * 60;
-            var days = hours * 24;
-            var time = new Date(timeString);
+        function addPathToMap(currentLocationData){
+            $scope.leafletObj.path.p1.latlngs.push({
+                lat:parseFloat(currentLocationData.LAT),
+                lng:parseFloat(currentLocationData.LON)
+            });
 
-            switch(timeIntervalCase){
-                case 'seconds':
-                    return Math.round((time.getTime())/seconds);
-                    break;
-                case 'minutes':
-                    return Math.round((time.getTime())/minutes);
-                    break;
-                case 'hours':
-                    return Math.round((time.getTime())/hours);
-                    break;
-                case 'days':
-                    return Math.round((time.getTime())/days);
-                    break;
-            }
-        }
-
-        function startAddingMarkers(LocationListData){
-            setBoundsToMap();
-            if(count<LocationListData.length){
-                var markerName = "m"+(count+1);
-                $scope.leafletObj.markers[markerName] = LeafletService.prepareMarketObl(LocationListData[count]);
-            }else{
-                $interval.cancel(startTheTrip);
-            }
-            console.log("Markers set: " + count + "/" + LocationListData.length);
-            count++;
         }
     }
 })();

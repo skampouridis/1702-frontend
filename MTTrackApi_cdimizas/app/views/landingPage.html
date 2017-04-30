@@ -36,49 +36,62 @@
                 </div>
                 <!-- Buttons -->
                 <div class="margin-bottom-30px text-align-center">
-                    <!-- Add markers -->
-                    <div class="row no-padding-L-R"
-                         ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
-                        <div class="col-xs-12 col-sm-9 no-padding-right">
-                            <button class="action-buttons-style width-100per"
-                                    ng-disabled="vesselTrack.list.length==0"
-                                    ng-click="addMarkersTMap()">Add markers
-                            </button>
-                        </div>
+                    <!--&lt;!&ndash; Add markers &ndash;&gt;-->
+                    <!--<div class="row no-padding-L-R"-->
+                         <!--ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">-->
+                        <!--<div class="col-xs-12 col-sm-9 no-padding-right">-->
+                            <!--<button class="action-buttons-style width-100per"-->
+                                    <!--ng-disabled="vesselTrack.list.length==0"-->
+                                    <!--ng-click="addMarkersTMap()">Add markers-->
+                            <!--</button>-->
+                        <!--</div>-->
 
-                        <div class="col-xs-12 col-sm-3 no-padding-left">
-                            <button class="action-buttons-style width-100per red-background"
-                                    ng-disabled="vesselTrack.list.length==0"
-                                    ng-click="removeMarkers()">
-                                <i class="fa fa-times"></i>
-                            </button>
+                        <!--<div class="col-xs-12 col-sm-3 no-padding-left">-->
+                            <!--<button class="action-buttons-style width-100per red-background"-->
+                                    <!--ng-disabled="vesselTrack.list.length==0"-->
+                                    <!--ng-click="removeMarkers()">-->
+                                <!--<i class="fa fa-times"></i>-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<br>-->
+                    <!--&lt;!&ndash; Add path &ndash;&gt;-->
+                    <!--<div class="row no-padding-L-R"-->
+                         <!--ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">-->
+                        <!--<div class="col-xs-12 col-sm-9 no-padding-right">-->
+                            <!--<button class="action-buttons-style width-100per"-->
+                                    <!--ng-disabled="vesselTrack.list.length==0"-->
+                                    <!--ng-click="addPathToMap()">Add path-->
+                            <!--</button>-->
+                        <!--</div>-->
+
+                        <!--<div class="col-xs-12 col-sm-3 no-padding-left">-->
+                            <!--<button class="action-buttons-style width-100per red-background"-->
+                                    <!--ng-disabled="vesselTrack.list.length==0"-->
+                                    <!--ng-click="removePath()">-->
+                                <!--<i class="fa fa-times"></i>-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <!-- Animation speed -->
+                    <div class="row no-padding-L-R"
+                        ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
+                        <!-- Start trip -->
+                        <h4 class="animation-title">Animation Speed (x)</h4>
+                        <div class="col-xs-12 col-sm-12">
+                            <rzslider rz-slider-model="animationStep"
+                                      rz-slider-options="slider.options">
+                            </rzslider>
                         </div>
                     </div>
-                    <br>
-                    <!-- Add path -->
-                    <div class="row no-padding-L-R"
-                         ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
-                        <div class="col-xs-12 col-sm-9 no-padding-right">
-                            <button class="action-buttons-style width-100per"
-                                    ng-disabled="vesselTrack.list.length==0"
-                                    ng-click="addPathToMap()">Add path
-                            </button>
-                        </div>
 
-                        <div class="col-xs-12 col-sm-3 no-padding-left">
-                            <button class="action-buttons-style width-100per red-background"
-                                    ng-disabled="vesselTrack.list.length==0"
-                                    ng-click="removePath()">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
                     <br>
                     <!-- Start, Stop trip -->
                     <div class="row no-padding-L-R"
                          ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
-                        <h4 class="animation-title">Trip Animation</h4>
                         <!-- Start trip -->
+                        <h4 class="animation-title">Trip Animation</h4>
                         <div class="col-xs-12 col-sm-3 col-sm-offset-1">
                             <button class="action-buttons-style width-100per"
                                     ng-class="vesselTrack.list.length==0 || tripStarted?'opacity-dot-4':''"
@@ -109,11 +122,6 @@
                     </div>
                     <div ng-if="tripStarted" class="row no-padding-L-R">
                         <span id="percentage">{{getPercentage()}}%</span>
-                        <!--<div class="col-xs-12 col-sm-12 progress-bar progress-bar-warning"-->
-                             <!--role="progressbar" aria-valuenow="{{getPercentage()}}" aria-valuemin="0"-->
-                             <!--aria-valuemax="100" ng-style="{width : ( getPercentage() + '%' ) }">-->
-                            <!--<span class="sr-only">{{getPercentage()}}% Complete (warning)</span>-->
-                        <!--</div>-->
                     </div>
                    
                 </div>

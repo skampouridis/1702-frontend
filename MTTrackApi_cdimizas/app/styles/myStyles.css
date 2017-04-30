@@ -674,6 +674,22 @@ ul.lower-roman {
     color: white;
 }
 
+#ex1Slider .slider-selection {
+    background: #BABABA;
+}
+
+.rzslider .rz-pointer {
+    background-color: #afb3b4 !important;
+}
+
+.rzslider .rz-bubble,
+.rzslider .rz-bubble.rz-limit {
+    /*bottom: 16px;*/
+    /*padding: 1px 3px;*/
+    color: #ffffff;
+    /*cursor: default;*/
+}
+
 @media only screen and (min-width: 1200px){
     .info li {
         display: inline-block;

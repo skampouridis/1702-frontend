@@ -6,11 +6,12 @@
     function LeafletService() {
 		// TODO
         var services = {
-            prepareMarketObl      : _prepareMarketObl,
-            setMapCenter          : _setMapCenter,
-            createMapMarkersList  : _createMapMarkersList,
-            createPathList        : _createPathList,
-            setMapBounds          : _setMapBounds
+            prepareMarketObl          : _prepareMarketObl,
+            setMapCenter              : _setMapCenter,
+            createMapMarkersList      : _createMapMarkersList,
+            createPathList            : _createPathList,
+            setMapBounds              : _setMapBounds,
+            setMapBoundsFromMarkerObj : _setMapBoundsFromMarkerObj
         };
 
         return services;
@@ -29,7 +30,7 @@
                     iconUrl: 'images/Ship-icon.png',
                     iconSize:     [38, 38], // size of the icon
                     iconAnchor:   [22, 38], // point of the icon which will correspond to marker's location
-                    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+                    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
                     // shadowUrl: 'img/leaf-shadow.png',
                     // shadowSize:   [50, 64], // size of the shadow
                     // shadowAnchor: [4, 62],  // the same for the shadow
@@ -62,6 +63,16 @@
             ];
         }
 
+        function _setMapBoundsFromMarkerObj(markersObj) {
+            var first = markersObj["m1"];
+            var lastPropName = "m" + Object.keys(markersObj).length;
+            var last = markersObj[lastPropName];
+            return [
+                [parseFloat(first.lat), parseFloat(first.lng)],
+                [parseFloat(last.lat), parseFloat(last.lng)]
+            ];
+        }
+
         function _createPathList(LocationListData){
             var path = {
                 p1:{
@@ -80,5 +91,54 @@
             }
             return path;
         }
+
+        // function startAddingMarkers(LocationListData){
+        //     setBoundsToMap();
+        //     if($scope.count<LocationListData.length){
+        //         var markerName = "m"+($scope.count+1);
+        //         $scope.leafletObj.markers[markerName] = LeafletService.prepareMarketObl(LocationListData[$scope.count]);
+        //     }else{
+        //         $interval.cancel(startTheTrip);
+        //     }
+        //     console.log("Markers set: " + $scope.count + "/" + LocationListData.length);
+        //     $scope.count++;
+        // }
+
+        // function _calculateSpeedIntervals(LocationListData){
+        //     var speeds = [];
+        //     for(var i=0; i<LocationListData.length; i++){
+        //         var next = i+1;
+        //         if(next<LocationListData.length){
+        //             var dt = getTimeInterval(LocationListData[next].TIMESTAMP, "minutes") - getTimeInterval(LocationListData[i].TIMESTAMP, "minutes");
+        //             var dlat = parseFloat(LocationListData[next].LAT) - parseFloat(LocationListData[i].LAT);
+        //             var s = parseFloat(dlat/dt);
+        //             speeds.push(s);
+        //         }
+        //     }
+        //     return speeds;
+        // }
+        //
+        // function _getTimeInterval(timeString, timeIntervalCase){
+        //     var seconds = 1000;
+        //     var minutes = seconds * 60;
+        //     var hours = minutes * 60;
+        //     var days = hours * 24;
+        //     var time = new Date(timeString);
+        //
+        //     switch(timeIntervalCase){
+        //         case 'seconds':
+        //             return Math.round((time.getTime())/seconds);
+        //             break;
+        //         case 'minutes':
+        //             return Math.round((time.getTime())/minutes);
+        //             break;
+        //         case 'hours':
+        //             return Math.round((time.getTime())/hours);
+        //             break;
+        //         case 'days':
+        //             return Math.round((time.getTime())/days);
+        //             break;
+        //     }
+        // }
     }
 })();

@@ -2,7 +2,7 @@
 var $stateProviderRef = null;
 (function () {
   'use strict';
-    angular.module('MTTrackingApi', ['ui.router', 'ngAnimate', 'ngRoute', 'leaflet-directive']);
+    angular.module('MTTrackingApi', ['ui.router', 'ngAnimate', 'ngRoute', 'leaflet-directive', 'rzModule']);
     angular.module('MTTrackingApi').config(
         function($stateProvider, $urlRouterProvider, $qProvider) {
             $qProvider.errorOnUnhandledRejections(false);
