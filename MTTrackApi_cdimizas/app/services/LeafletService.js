@@ -20,12 +20,14 @@
         function _prepareMarketObl(currentLocationData){
             var utcDateString = _utcDateFn(currentLocationData.TIMESTAMP);
             var tooltip = currentLocationData.SPEED+ "Knots / "+
-                currentLocationData.COURSE + "&#176;" + " " +
+                currentLocationData.COURSE + "&#176;" + " | " +
                 utcDateString;
             return {
                 lat: parseFloat(currentLocationData.LAT),
                 lng: parseFloat(currentLocationData.LON),
                 message: tooltip,
+                // group: currentLocationData.MMSI,
+                layer: "trip",
                 iconAngle:parseFloat(currentLocationData.HEADING),
                 icon:{
                     // iconUrl: 'images/Ship-icon.png',

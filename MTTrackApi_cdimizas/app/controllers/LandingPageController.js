@@ -19,6 +19,7 @@
         // models
         $scope.tripStarted = false;
         $scope.selectDaysModel = null;
+        $scope.loadingVesselTrackingData = false;
         $scope.animationStep = 1;
         $scope.count = 0;
         $scope.selectMMSIModel = 219291000;
@@ -30,14 +31,12 @@
                 ceil: 100
             }
         };
-
+        //
         $scope.vesselTrack = {
             shipId: null,
             list: []
         };
-        $scope.loadingVesselTrackingData = false;
-
-        // Side bar elements
+        // Days
         $scope.selectDays = {
             list:[
                 {
@@ -59,16 +58,17 @@
                 {
                     id:40,
                     name: "40 Days"
-                },
-                {
-                    id:100,
-                    name: "100 Days"
                 }
+                // {
+                //     id:100,
+                //     name: "100 Days"
+                // }
             ],
             change: function () {
                 $scope.updateVesselTrack($scope.selectDaysModel, $scope.selectMMSIModel);
             }
         };
+        // MMSI
         $scope.selectMMSI = {
             list:[
                 {
@@ -80,7 +80,6 @@
                 $scope.updateVesselTrack($scope.selectDaysModel, $scope.selectMMSIModel);
             }
         };
-
         // Leaflet Map
         $scope.leafletObj = {
             center:{ lat: 37.9781853,
@@ -92,15 +91,44 @@
             },
             markers : {},
             path: {},
-            bounds: {}
+            bounds: {},
+            layers: {
+                baselayers:  {
+                    xyz: {
+                        name: 'OpenStreetMap (XYZ)',
+                        url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        type: 'xyz'
+                    }
+                },
+                overlays: {
+                    trip: {
+                        name: "Vessel Trip Markers",
+                        type: "markercluster",
+                        visible: true,
+                        layerOptions: {
+                            showCoverageOnHover: false,
+                            // spiderfyOnMaxZoom: false,
+                            // singleMarkerMode:true,
+                            disableClusteringAtZoom: 10,
+                            maxClusterRadius:50,
+                            iconCreateFunction: function (cluster) {
+                                return L.divIcon({
+                                    className: 'map-marker marker-color-gray a-class',
+                                    iconSize: new L.Point(28,28),
+                                    // html:"<p class=''><i class='fa fa-location-arrow custom-cluster-icon color-red fa-2x' aria-hidden='true'></i><b>"+cluster.getChildCount()+"</b></p>"
+                                    html:"<i class='fa fa-circle color-light-red fa-1x'></i><b>"+cluster.getChildCount()+"</b>"
+                                });
+                            }
+                        }
+                    }
+                }
+            }
         };
 
         /*************************
          * SCOPE FUNCTIONS
          *************************/
-        /*
-            API call
-         */
+        // API call
         $scope.updateVesselTrack = function (days, mmsi) {
             $scope.loadingVesselTrackingData = true;
             ApiCallService.getVesselTrack(days, mmsi).then(
@@ -121,10 +149,7 @@
                 }
             );
         };
-
-        /*
-            Animation buttons
-         */
+        // Animation buttons
         $scope.startTrip = function () {
             $scope.tripStarted = true;
             $scope.leafletObj.path = {
@@ -148,13 +173,13 @@
                 // $scope.count++;
             }, 1500);
         };
-
+        //
         $scope.pauseTrip = function () {
             $scope.tripStarted = false;
             // $scope.leafletObj.markers = [];
             $interval.cancel(startTheTrip);
         };
-
+        //
         $scope.cancelTrip = function () {
             $scope.count = 0;
             objCounter = 0;
@@ -164,7 +189,6 @@
             pathCoordinates = [];
             $interval.cancel(startTheTrip);
         };
-
         //TODO - bind locationGrid to zoom level
         $scope.$watch("leafletObj.center.zoom", function (zoom) {
             // TODO
@@ -172,10 +196,7 @@
             // TODO - PROBABLY PERFORM MARKERS CLUSTERING
             // if zoom level x then ...
         });
-
-        /*
-            animation progress
-         */
+        // animation progress
         $scope.getPercentage = function () {
             var progress = ($scope.count / $scope.total)*100;
             if($scope.count>=$scope.total){
@@ -183,14 +204,11 @@
             }
             return progress.toFixed(2);
         };
-
+        //
         $scope.getTotal = function () {
             return $scope.total;
         };
-
-        /*
-            Add/remove (bulky) markers/path for all retrieved data-set
-         */
+        // Add/remove (bulky) markers/path for all retrieved data-set
         $scope.addMarkersTMap = function () {
             // TODO - Find Center (on animation the center will be the next marker)
             // TODO - The loaded on map markers will depend on zoom level
@@ -198,17 +216,17 @@
             $scope.leafletObj.markers = LeafletService.createMapMarkersList($scope.vesselTrack.list);
             setBoundsToMap();
         };
-
+        //
         $scope.addPathToMap = function () {
             $scope.leafletObj.path    = LeafletService.createPathList($scope.vesselTrack.list);
             setBoundsToMap();
         };
-
+        //
         $scope.removeMarkers = function () {
             // $scope.leafletObj.center  = resetMapCenter();
             $scope.leafletObj.markers = {};
         };
-
+        //
         $scope.removePath = function () {
             // $scope.leafletObj.center  = resetMapCenter();
             $scope.leafletObj.path = {};
@@ -240,15 +258,16 @@
         function addOneMarkerToMap(currentLocationData){
             var markerName = "m"+(objCounter+1);
             $scope.leafletObj.markers[markerName] = LeafletService.prepareMarketObl(currentLocationData);
-            if(objCounter>0){
-                var previousMarker = "m"+(objCounter);
-                $scope.leafletObj.markers[previousMarker].icon = {
-                    iconUrl: 'images/dot.png',
-                        iconSize:     [14, 14], // size of the icon
-                        iconAnchor:   [7, 10], // point of the icon which will correspond to marker's location
-                        popupAnchor:  [3, 0] // point from which the popup should open relative to the iconAnchor
-                }
-            }
+            // The below replaces previous marker icon with dot
+            // if(objCounter>0){
+            //     var previousMarker = "m"+(objCounter);
+            //     $scope.leafletObj.markers[previousMarker].icon = {
+            //         iconUrl: 'images/dot.png',
+            //             iconSize:     [14, 14], // size of the icon
+            //             iconAnchor:   [7, 10], // point of the icon which will correspond to marker's location
+            //             popupAnchor:  [3, 0] // point from which the popup should open relative to the iconAnchor
+            //     }
+            // }
             objCounter++;
         }
 
