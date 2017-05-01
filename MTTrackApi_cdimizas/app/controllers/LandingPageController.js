@@ -13,6 +13,7 @@
 
         var startTheTrip = null;
         var objCounter = 0;
+        var pathCoordinates = [];
 
 
         // models
@@ -90,20 +91,16 @@
                 // scrollWheelZoom: false
             },
             markers : {},
-            path: {
-                p1:{
-                    color: 'green',
-                    weight: 4,
-                    message: "<h5>Route</h5>",
-                    latlngs: []
-                }
-            },
+            path: {},
             bounds: {}
         };
 
         /*************************
          * SCOPE FUNCTIONS
          *************************/
+        /*
+            API call
+         */
         $scope.updateVesselTrack = function (days, mmsi) {
             $scope.loadingVesselTrackingData = true;
             ApiCallService.getVesselTrack(days, mmsi).then(
@@ -125,31 +122,19 @@
             );
         };
 
-        $scope.addMarkersTMap = function () {
-            // TODO - Find Center (on animation the center will be the next marker)
-            // TODO - The loaded on map markers will depend on zoom level
-            // $scope.leafletObj.center  = LeafletService.setMapCenter($scope.vesselTrack.list[0]);
-            $scope.leafletObj.markers = LeafletService.createMapMarkersList($scope.vesselTrack.list);
-            setBoundsToMap();
-        };
-
-        $scope.addPathToMap = function () {
-            $scope.leafletObj.path    = LeafletService.createPathList($scope.vesselTrack.list);
-            setBoundsToMap();
-        };
-
-        $scope.removeMarkers = function () {
-            $scope.leafletObj.center  = resetMapCenter();
-            $scope.leafletObj.markers = {};
-        };
-
-        $scope.removePath = function () {
-            $scope.leafletObj.center  = resetMapCenter();
-            $scope.leafletObj.path = {};
-        };
-
+        /*
+            Animation buttons
+         */
         $scope.startTrip = function () {
             $scope.tripStarted = true;
+            $scope.leafletObj.path = {
+                p1: {
+                    color: 'green',
+                    weight: 4,
+                    // message: "<h5>Route</h5>",
+                    latlngs: pathCoordinates
+                }
+            };
             startTheTrip = $interval(function() {
                 if($scope.count<$scope.vesselTrack.list.length){
                     addOneMarkerToMap($scope.vesselTrack.list[$scope.count]);
@@ -158,8 +143,8 @@
                 }else{
                     $interval.cancel(startTheTrip);
                 }
-                console.log("Markers set: " + $scope.count + "/" + $scope.vesselTrack.list.length);
                 $scope.count = $scope.count + $scope.animationStep;
+                console.log("Markers set: " + $scope.count + "/" + $scope.vesselTrack.list.length);
                 // $scope.count++;
             }, 1500);
         };
@@ -174,20 +159,23 @@
             $scope.count = 0;
             objCounter = 0;
             $scope.tripStarted = false;
-            $scope.leafletObj.markers = [];
-            $scope.leafletObj.path.latlngs = [];
+            $scope.leafletObj.markers = {};
+            $scope.leafletObj.path = {};
+            pathCoordinates = [];
             $interval.cancel(startTheTrip);
         };
 
-        //bind locationGrid to zoom level
+        //TODO - bind locationGrid to zoom level
         $scope.$watch("leafletObj.center.zoom", function (zoom) {
             // TODO
             // TODO - ON ZOOM LEVEL DO NOT PRINT ALL MARKERS
+            // TODO - PROBABLY PERFORM MARKERS CLUSTERING
             // if zoom level x then ...
         });
 
-        $scope.threshold = 15000;
-
+        /*
+            animation progress
+         */
         $scope.getPercentage = function () {
             var progress = ($scope.count / $scope.total)*100;
             if($scope.count>=$scope.total){
@@ -195,8 +183,35 @@
             }
             return progress.toFixed(2);
         };
+
         $scope.getTotal = function () {
             return $scope.total;
+        };
+
+        /*
+            Add/remove (bulky) markers/path for all retrieved data-set
+         */
+        $scope.addMarkersTMap = function () {
+            // TODO - Find Center (on animation the center will be the next marker)
+            // TODO - The loaded on map markers will depend on zoom level
+            // $scope.leafletObj.center  = LeafletService.setMapCenter($scope.vesselTrack.list[0]);
+            $scope.leafletObj.markers = LeafletService.createMapMarkersList($scope.vesselTrack.list);
+            setBoundsToMap();
+        };
+
+        $scope.addPathToMap = function () {
+            $scope.leafletObj.path    = LeafletService.createPathList($scope.vesselTrack.list);
+            setBoundsToMap();
+        };
+
+        $scope.removeMarkers = function () {
+            // $scope.leafletObj.center  = resetMapCenter();
+            $scope.leafletObj.markers = {};
+        };
+
+        $scope.removePath = function () {
+            // $scope.leafletObj.center  = resetMapCenter();
+            $scope.leafletObj.path = {};
         };
 
 
@@ -225,6 +240,15 @@
         function addOneMarkerToMap(currentLocationData){
             var markerName = "m"+(objCounter+1);
             $scope.leafletObj.markers[markerName] = LeafletService.prepareMarketObl(currentLocationData);
+            if(objCounter>0){
+                var previousMarker = "m"+(objCounter);
+                $scope.leafletObj.markers[previousMarker].icon = {
+                    iconUrl: 'images/dot.png',
+                        iconSize:     [14, 14], // size of the icon
+                        iconAnchor:   [7, 10], // point of the icon which will correspond to marker's location
+                        popupAnchor:  [3, 0] // point from which the popup should open relative to the iconAnchor
+                }
+            }
             objCounter++;
         }
 
@@ -233,7 +257,7 @@
                 lat:parseFloat(currentLocationData.LAT),
                 lng:parseFloat(currentLocationData.LON)
             });
-
+            pathCoordinates = angular.copy($scope.leafletObj.path.p1.latlngs);
         }
     }
 })();

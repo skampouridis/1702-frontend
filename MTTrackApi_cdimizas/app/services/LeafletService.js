@@ -18,24 +18,41 @@
 
         // prepare marker object and add it to directive attribute
         function _prepareMarketObl(currentLocationData){
-            var tooltip = "Speed: "+currentLocationData.SPEED+
-                " Course: " + currentLocationData.COURSE +
-                " At Time: " + new Date(currentLocationData.TIMESTAMP);
+            var utcDateString = _utcDateFn(currentLocationData.TIMESTAMP);
+            var tooltip = currentLocationData.SPEED+ "Knots / "+
+                currentLocationData.COURSE + "&#176;" + " " +
+                utcDateString;
             return {
                 lat: parseFloat(currentLocationData.LAT),
                 lng: parseFloat(currentLocationData.LON),
                 message: tooltip,
                 iconAngle:parseFloat(currentLocationData.HEADING),
                 icon:{
-                    iconUrl: 'images/Ship-icon.png',
-                    iconSize:     [38, 38], // size of the icon
-                    iconAnchor:   [22, 38], // point of the icon which will correspond to marker's location
-                    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+                    // iconUrl: 'images/Ship-icon.png',
+                    iconUrl: 'images/triangle-arrow.png',
+                    iconSize:     [28, 28], // size of the icon
+                    iconAnchor:   [15, 20], // point of the icon which will correspond to marker's location
+                    popupAnchor:  [5, 0] // point from which the popup should open relative to the iconAnchor
                     // shadowUrl: 'img/leaf-shadow.png',
                     // shadowSize:   [50, 64], // size of the shadow
                     // shadowAnchor: [4, 62],  // the same for the shadow
                 }
             };
+        }
+
+        function _utcDateFn(dateString){
+            var date = new Date(dateString);
+            var result = date.getUTCFullYear()+"-"+_addZero(date.getUTCMonth())+"-"+_addZero(date.getUTCDate())+ " "+
+                _addZero(date.getUTCHours())+":"+_addZero(date.getUTCMinutes())+ " UTC";
+            return result;
+        }
+
+        function _addZero(datePart){
+            var s = datePart.toString();
+            if (s.length === 1) {
+                return "0" + s;
+            }
+            return s;
         }
 
         function _setMapCenter(currentLocationData){
