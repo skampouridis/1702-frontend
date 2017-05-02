@@ -120,6 +120,11 @@
                                 });
                             }
                         }
+                    },
+                    pathLayer:{
+                        name: "Vessel Path",
+                        type: 'group',
+                        visible: true
                     }
                 }
             }
@@ -156,6 +161,7 @@
                 p1: {
                     color: 'green',
                     weight: 4,
+                    layer: "pathLayer",
                     // message: "<h5>Route</h5>",
                     latlngs: pathCoordinates
                 }
