@@ -1,17 +1,21 @@
 (function () {
     "use strict";
     angular.module('MTTrackingApi').factory('LeafletService',LeafletService);
-    LeafletService.$inject= [];
+    LeafletService.$inject= ['leafletBoundsHelpers'];
 
-    function LeafletService() {
+    function LeafletService(leafletBoundsHelpers) {
 		// TODO
         var services = {
-            prepareMarketObl          : _prepareMarketObl,
-            setMapCenter              : _setMapCenter,
-            createMapMarkersList      : _createMapMarkersList,
-            createPathList            : _createPathList,
-            setMapBounds              : _setMapBounds,
-            setMapBoundsFromMarkerObj : _setMapBoundsFromMarkerObj
+            prepareMarketObl                : _prepareMarketObl,
+            setMapCenter                    : _setMapCenter,
+            createMapMarkersList            : _createMapMarkersList,
+            createPathList                  : _createPathList,
+            setMapBounds                    : _setMapBounds,
+            setMapBoundsFromMarkerObj       : _setMapBoundsFromMarkerObj,
+            getTime                         : _getTime,
+            calcTimeInterval                : _calcTimeInterval,
+            setBoundsBetweenExistingMarkers : _setBoundsBetweenExistingMarkers,
+            setBoundsToMap                  : _setBoundsToMap
         };
 
         return services;
@@ -19,7 +23,7 @@
         // prepare marker object and add it to directive attribute
         function _prepareMarketObl(currentLocationData){
             var utcDateString = _utcDateFn(currentLocationData.TIMESTAMP);
-            var tooltip = currentLocationData.SPEED+ "Knots / "+
+            var tooltip = currentLocationData.SPEED+ "Speed / "+
                 currentLocationData.COURSE + "&#176;" + " | " +
                 utcDateString;
             return {
@@ -111,6 +115,46 @@
             return path;
         }
 
+        function _getTime(timeString, timeCase){
+            var seconds = 1000;
+            var minutes = seconds * 60;
+            var hours = minutes * 60;
+            var days = hours * 24;
+            var time = new Date(timeString);
+
+            switch(timeCase){
+                case 'seconds':
+                    return Math.round((time.getTime())/seconds);
+                    break;
+                case 'minutes':
+                    return Math.round((time.getTime())/minutes);
+                    break;
+                case 'hours':
+                    return Math.round((time.getTime())/hours);
+                    break;
+                case 'days':
+                    return Math.round((time.getTime())/days);
+                    break;
+            }
+        }
+
+        function _calcTimeInterval(nextLocation, currentLocation, timeCase){
+            var dt = _getTime(nextLocation.TIMESTAMP, timeCase) - _getTime(currentLocation.TIMESTAMP, timeCase);
+            return parseFloat(dt);
+        }
+
+        function _setBoundsBetweenExistingMarkers(markersList){
+            var boundsArray = _setMapBoundsFromMarkerObj(markersList);
+            var r = leafletBoundsHelpers.createBoundsFromArray(boundsArray);
+            return r;
+        }
+
+        function _setBoundsToMap(dataList){
+            var boundsArray = _setMapBounds(dataList);
+            var r = leafletBoundsHelpers.createBoundsFromArray(boundsArray);
+            return r;
+        }
+
         // function startAddingMarkers(LocationListData){
         //     setBoundsToMap();
         //     if($scope.count<LocationListData.length){
@@ -136,28 +180,6 @@
         //     }
         //     return speeds;
         // }
-        //
-        // function _getTimeInterval(timeString, timeIntervalCase){
-        //     var seconds = 1000;
-        //     var minutes = seconds * 60;
-        //     var hours = minutes * 60;
-        //     var days = hours * 24;
-        //     var time = new Date(timeString);
-        //
-        //     switch(timeIntervalCase){
-        //         case 'seconds':
-        //             return Math.round((time.getTime())/seconds);
-        //             break;
-        //         case 'minutes':
-        //             return Math.round((time.getTime())/minutes);
-        //             break;
-        //         case 'hours':
-        //             return Math.round((time.getTime())/hours);
-        //             break;
-        //         case 'days':
-        //             return Math.round((time.getTime())/days);
-        //             break;
-        //     }
-        // }
+
     }
 })();
