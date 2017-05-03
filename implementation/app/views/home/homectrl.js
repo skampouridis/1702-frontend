@@ -30,10 +30,11 @@ angular.module('myApp.home', ['ngRoute'])
 
         */
 
-        // LocationsService.GetLocations(3, '', '', 538005478, '', '', '', '', '', 'jsono', function(results) {
-        //     $scope.results = results;
-        //     console.log(results);
-        // });
+        LocationsService.GetLocations(3, '', '', 477336000, '', '', '', '', '', 'jsono', function(results) {
+            $scope.results = results;
+            console.log(results);
+            loadMap(results)
+        });
 
         $scope.fetchVessel = function() {
           var mmsi = parseInt($scope.mmsi);
@@ -46,9 +47,7 @@ angular.module('myApp.home', ['ngRoute'])
 
         var locations = null;
         var vesselLine = [];
-        $http.get('img/data.json').then(function(data) {                        //I am using a local copy of the data retrieved from the server
-            loadMap(data)                                                        //due to the CORS limitation
-        });
+    
 
         function loadMap(data) {
             locations = data.data;
@@ -100,22 +99,19 @@ angular.module('myApp.home', ['ngRoute'])
                         scale: 0.2,
                         anchorXUnits: 'fraction',
                         anchorYUnits: 'fraction',
-                        opacity: 0.75,
-                        src: 'img/location.png'
+                        opacity: 0.9,
+                        src: 'img/location2.png'
                     })
                 }),
                 'icon': new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 7,
-                        snapToPixel: false,
-                        fill: new ol.style.Fill({
-                            color: 'black'
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: 'white',
-                            width: 2
-                        })
-                    })
+                  image: new ol.style.Icon({
+                      anchor: [0.5, 1],
+                      scale: 0.2,
+                      anchorXUnits: 'fraction',
+                      anchorYUnits: 'fraction',
+                      opacity: 1,
+                      src: 'img/location1.png'
+                  })
                 })
             };
 

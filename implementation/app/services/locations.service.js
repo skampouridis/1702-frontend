@@ -24,14 +24,21 @@ angular.module('myApp')
             if (protocol.length>0) parameters=parameters.concat('/protocol:', protocol);
             var formatUrl = WebService.Endpoint('/exportvesseltrack').concat(parameters);
             // $http.jsonp(formatUrl, {jsonpCallbackParam: 'log_result'});
-            $http({
-                method: "GET",
-                url: WebService.Endpoint(formatUrl)
-            }).then(function successCallback(response) {
-                var tracks = response.data;
-                callback(tracks);
-            }, function errorCallback(response) {
-                console.log(response);
+            // $http({
+            //     method: "GET",
+            //     url: WebService.Endpoint(formatUrl)
+            // }).then(function successCallback(response) {
+            //     var tracks = response.data;
+            //     callback(tracks);
+            // }, function errorCallback(response) {
+            //     console.log(response);
+            // });
+            $.get(formatUrl, function(data, status){
+                console.log("\nStatus: " + status);
+            }).done(function(data) {
+              callback(data);
+            }).fail(function() {
+              console.log('Failed');
             });
         }
         return service;
