@@ -25,7 +25,7 @@ angular.module('myApp.home', ['ngRoute'])
           LocationsService.GetLocations(3, '', '', mmsi, '', '', '', '', '', 'jsono', function(results) {
               $scope.results = results;
               console.log(results);
-              // loadMap(results);
+              loadMap(results);
           });
         };
 
@@ -144,8 +144,6 @@ angular.module('myApp.home', ['ngRoute'])
 
                 if (animating) {
                     var elapsedTime = frameState.time - now;
-                    // here the trick to increase speed is to jump some indexes
-                    // on lineString coordinates
                     var index = Math.round(speed * elapsedTime / 1000);
 
                     if (index >= routeLength) {
