@@ -5827,7 +5827,8 @@ main {
 .overmap {
   position: absolute;
   z-index: 1;
-  width: 20%; }
+  width: 20%;
+  border-radius: 10px; }
 
 .top-left {
   top: 65px;

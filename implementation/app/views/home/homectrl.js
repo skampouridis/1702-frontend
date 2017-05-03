@@ -14,26 +14,10 @@ angular.module('myApp.home', ['ngRoute'])
 
     .controller('HomeCtrl', function($scope, LocationsService, $http) {
 
-        /*
-        The XHTTP requests are not accepted by the server, because the server does not have CORS Headers.
-        I tried to overcome this using JSONP requests, but it failed.
-        There are three possible solutions:
-        1. I reproduce the MarineTraffic API locally, and make requests without javascript (because the CORS limitation is JavaScript's limitation), using PHP for example.
-        2. I use JSONP in my requests and whitelist the domain of the MarineTraffic API
-        2. The server adds CORS headers
-
-        from stackoverflow:
-        JSONP (as in "JSON with Padding") is a method commonly used to
-        bypass the cross-domain policies in web browsers (you are not
-        allowed to make AJAX requests to a webpage perceived to be on
-        a different server by the browser).
-
-        */
-
         LocationsService.GetLocations(3, '', '', 477336000, '', '', '', '', '', 'jsono', function(results) {
             $scope.results = results;
             console.log(results);
-            loadMap(results)
+            loadMap(results);
         });
 
         $scope.fetchVessel = function() {
@@ -47,13 +31,12 @@ angular.module('myApp.home', ['ngRoute'])
 
         var locations = null;
         var vesselLine = [];
-    
 
         function loadMap(data) {
-            locations = data.data;
+            locations = data;
             console.log(locations);
 
-            for (var i = 0; i < locations.length; i++) {
+            for (let i = 0; i < locations.length; i++) {
                 var coords = [];
                 coords.push(parseFloat(locations[i].LON));
                 coords.push(parseFloat(locations[i].LAT));
@@ -89,7 +72,7 @@ angular.module('myApp.home', ['ngRoute'])
             var styles = {
                 'route': new ol.style.Style({
                     stroke: new ol.style.Stroke({
-                        width: 6,
+                        width: 3,
                         color: 'rgba(151, 79, 181, 0.79)'
                     })
                 }),
@@ -134,6 +117,12 @@ angular.module('myApp.home', ['ngRoute'])
 
             vectorLayer.getSource().addFeatures([routeFeature, geoMarker, startMarker, endMarker]);
 
+            for (let i = 0; i < locations.length ; i++) {
+              vectorLayer.getSource().addFeatures([new ol.Feature({
+                  type: 'icon',
+                  geometry: new ol.geom.Point(routeCoords[i])
+              })]);
+            };
             var map = new ol.Map({
                 target: 'map',
                 view: new ol.View({
