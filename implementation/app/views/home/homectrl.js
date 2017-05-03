@@ -12,7 +12,7 @@ angular.module('myApp.home', ['ngRoute'])
             });
     }])
 
-    .controller('HomeCtrl', function($scope, VesselTracks, LocationsService, $http) {
+    .controller('HomeCtrl', function($scope, LocationsService, $http) {
 
         /*
         The XHTTP requests are not accepted by the server, because the server does not have CORS Headers.

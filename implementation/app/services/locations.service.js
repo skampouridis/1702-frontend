@@ -23,7 +23,16 @@ angular.module('myApp')
             if (typeof MAXLON == 'number') parameters=parameters.concat('/MAXLON:', MAXLON.toString());
             if (protocol.length>0) parameters=parameters.concat('/protocol:', protocol);
             var formatUrl = WebService.Endpoint('/exportvesseltrack').concat(parameters);
-            $http.jsonp(formatUrl, {jsonpCallbackParam: 'log_result'});
+            // $http.jsonp(formatUrl, {jsonpCallbackParam: 'log_result'});
+            $http({
+                method: "GET",
+                url: WebService.Endpoint(formatUrl)
+            }).then(function successCallback(response) {
+                var tracks = response.data;
+                callback(tracks);
+            }, function errorCallback(response) {
+                console.log(response);
+            });
         }
         return service;
     }]);
