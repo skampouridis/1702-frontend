@@ -83,7 +83,7 @@ angular.module('myApp.home', ['ngRoute'])
                         anchorXUnits: 'fraction',
                         anchorYUnits: 'fraction',
                         opacity: 0.9,
-                        src: 'img/location2.png'
+                        src: 'img/vessel.png'
                     })
                 }),
                 'icon': new ol.style.Style({
@@ -117,13 +117,6 @@ angular.module('myApp.home', ['ngRoute'])
 
             vectorLayer.getSource().addFeatures([routeFeature, geoMarker, startMarker, endMarker]);
 
-            // for (let i = 0; i < locations.length ; i++) {
-            //   vectorLayer.getSource().addFeatures([new ol.Feature({
-            //       type: 'icon',
-            //       geometry: new ol.geom.Point(routeCoords[i])
-            //   })]);
-            // };
-
             var waypoints = new Array(locations.length);
 
             for (let i = 0; i < locations.length; i++) {
@@ -149,20 +142,13 @@ angular.module('myApp.home', ['ngRoute'])
                     var style = styleCache[size];
                     if (!style) {
                         style = [new ol.style.Style({
-                            image: new ol.style.Circle({
-                                radius: 10,
-                                stroke: new ol.style.Stroke({
-                                    color: '#fff'
-                                }),
-                                fill: new ol.style.Fill({
-                                    color: '#3399CC'
-                                })
-                            }),
-                            text: new ol.style.Text({
-                                text: size.toString(),
-                                fill: new ol.style.Fill({
-                                    color: '#fff'
-                                })
+                            image: new ol.style.Icon({
+                                anchor: [0.5, 1],
+                                scale: 1,
+                                anchorXUnits: 'fraction',
+                                anchorYUnits: 'fraction',
+                                opacity: 1,
+                                src: 'img/waypoint.svg'
                             })
                         })];
                         styleCache[size] = style;
@@ -170,10 +156,6 @@ angular.module('myApp.home', ['ngRoute'])
                     return style;
                 }
             });
-
-            // var raw = new ol.layer.Vector({
-            //   source: waypointsSource
-            // });
 
             var map = new ol.Map({
                 target: 'map',
@@ -205,6 +187,8 @@ angular.module('myApp.home', ['ngRoute'])
 
                     var currentPoint = new ol.geom.Point(routeCoords[index]);
                     var feature = new ol.Feature(currentPoint);
+                    var curRot=styles.geoMarker.getImage().getRotation();
+                    styles.geoMarker.getImage().setRotation(curRot+40);
                     vectorContext.drawFeature(feature, styles.geoMarker);
                 };
                 map.render();
