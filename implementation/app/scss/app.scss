@@ -10,11 +10,47 @@ body {
 }
 
 main {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+    // width: 100%;
+    // height: 100%;
+    // margin: 0;
+    // padding: 0;
 }
+
+.col-centered{
+  padding-top: 15px;
+    float: none;
+    margin: 0 auto;
+
+li {
+    list-style-type: none;
+  }
+
+  a {
+    color: rgb(160, 108, 184);
+    font-weight: bold;
+  }
+  a:hover {
+    color: rgb(204, 174, 16);
+    text-decoration: none;
+    font-weight: bolder;
+  }
+}
+
+.profpic {
+  width: 30%;
+  margin: 0 auto;
+
+  .profpic-image:hover {
+    -webkit-filter: grayscale(40%);
+    -moz-filter:    grayscale(40%);
+    -ms-filter:     grayscale(40%);
+    -o-filter:      grayscale(40%);
+    filter:         grayscale(40%);
+    opacity: 1.0;
+    cursor: pointer;
+  }
+}
+
 
 .separator {
     height: 30px;

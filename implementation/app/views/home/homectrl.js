@@ -46,7 +46,6 @@ angular.module('myApp.home', ['ngRoute'])
               var days = 3;
             };
             LocationsService.GetLocations(days, '', '', mmsi, '', '', '', '', '', 'jsono', function(results) {
-                console.log(results);
                 loadMap(results);
             });
         };
@@ -145,7 +144,6 @@ angular.module('myApp.home', ['ngRoute'])
                     properties: propertiesArray[i]
                 };
             };
-            console.log(routeCoordsProps[0]);
 
             var routeLength = routeCoordsProps.length;
 
@@ -230,11 +228,10 @@ angular.module('myApp.home', ['ngRoute'])
                 var frameState = event.frameState;
 
                 if (animating) {
-                    console.log(index);
                     var elapsedTime = frameState.time - now;
                     var speedfactor = parseInt(propertiesArray[index].speed).map(0,550,1,10);    // See the comment in config.js. The speed, is in knots x 10,
                     index += Math.round((speed*speedfactor));                                    // so it will be a number between 0 and 550 (max knots ever is 55).
-                    console.log(routeLength, index);                                             // So, I am creating a factor, multiply it with the chosen speed, and
+                                                                                                 // So, I am creating a factor, multiply it with the chosen speed, and
                     if (index >= routeLength) {                                                  // jump these many indices.
                         index=0;
                         stopAnimation(true);
@@ -257,7 +254,6 @@ angular.module('myApp.home', ['ngRoute'])
                     animating = true;
                     now = new Date().getTime();
                     speed = speedInput.value;
-                    console.log(speed);
                     startButton.textContent = 'Cancel Animation';
                     geoMarker.setStyle(null);
                     map.on('postcompose', moveFeature);
@@ -282,7 +278,6 @@ angular.module('myApp.home', ['ngRoute'])
 
             var feature = map.forEachFeatureAtPixel(evt.pixel,
                 function(feature, layer) {
-                  console.log(layer, feature.getProperties());
                     return feature;
                 });
 

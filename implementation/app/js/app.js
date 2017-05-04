@@ -4,7 +4,8 @@ var myApp = angular.module('myApp', [
     'ngRoute',
     'ui.router',
     'ngResource',
-    'myApp.home'
+    'myApp.home',
+    'myApp.about'
 ]);
 
 myApp.config(function($stateProvider, $urlRouterProvider, $sceDelegateProvider, $sceProvider) {
