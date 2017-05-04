@@ -2,14 +2,14 @@
     <div id='controls' class='overmap top-left thick-cloud'>
         <h4>Controls</h4>
         <form ng-submit="fetchVessel()" id='new-vessel'>
-          <div class="input-group">
-              <span class="input-group-addon">MMSI</span>
-              <input type="text" class="form-control" placeholder="MMSI" aria-describedby="MMSI" ng-model="mmsi">
-          </div>
-          <div class="separator">
-          </div>
-          <button type="submit" class="btn btn-default pull-right">SHOW VESSEL</button>
-          <div class="separator"></div>
+            <div class="input-group">
+                <span class="input-group-addon">MMSI</span>
+                <input type="text" class="form-control" placeholder="MMSI" aria-describedby="MMSI" ng-model="mmsi">
+            </div>
+            <div class="separator">
+            </div>
+            <button type="submit" class="btn btn-default pull-right">SHOW VESSEL</button>
+            <div class="separator"></div>
         </form>
         <div class="separator"></div>
         <div class="input-group">
@@ -20,4 +20,8 @@
         </div>
         <button class="btn btn-default pull-right" id="start-animation" ng-click="startAnimation()">Start Animation</button>
     </div>
+</div>
+<div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <div id="popup-content"></div>
 </div>
