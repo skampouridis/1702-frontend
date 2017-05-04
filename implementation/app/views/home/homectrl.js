@@ -35,14 +35,22 @@ angular.module('myApp.home', ['ngRoute'])
         function loadMap(data) {
             locations = data;
             console.log(locations);
-
+            var propertiesArray = [];
             for (let i = 0; i < locations.length; i++) {
                 var coords = [];
+                var props = [{
+                  speed: locations[i].SPEED,
+                  course: locations[i].COURSE,
+                  heading: locations[i].HEADING,
+                  time: locations[i].TIMESTAMP,
+                  id: locations[i].SHIP_ID
+                }];
                 coords.push(parseFloat(locations[i].LON));
                 coords.push(parseFloat(locations[i].LAT));
                 vesselLine.push(coords);
+                propertiesArray[i] = props;
             };
-            console.log(vesselLine);
+            console.log(propertiesArray[0][0]);
 
             var strPrj = new ol.geom.LineString();
             strPrj.setCoordinates(vesselLine);
@@ -56,10 +64,15 @@ angular.module('myApp.home', ['ngRoute'])
                 geometry: featureLine,
                 type: 'route'
             });
+
             var geoMarker = new ol.Feature({
                 type: 'geoMarker',
-                geometry: new ol.geom.Point(routeCoords[0])
+                geometry: new ol.geom.Point(routeCoords[0]),
+                properties: [{
+                  course: locations[0].HEADING
+                }]
             });
+            console.log(geoMarker.getProperties().properties);
             var startMarker = new ol.Feature({
                 type: 'icon',
                 geometry: new ol.geom.Point(routeCoords[0])
@@ -187,8 +200,10 @@ angular.module('myApp.home', ['ngRoute'])
 
                     var currentPoint = new ol.geom.Point(routeCoords[index]);
                     var feature = new ol.Feature(currentPoint);
-                    var curRot=styles.geoMarker.getImage().getRotation();
-                    styles.geoMarker.getImage().setRotation(curRot+40);
+                    console.log(propertiesArray[index][0]);
+                    var head = propertiesArray[index][0].heading;
+                    styles.geoMarker.getImage().setRotation(head*Math.PI/180);
+                    console.log(head*Math.PI/180);
                     vectorContext.drawFeature(feature, styles.geoMarker);
                 };
                 map.render();
