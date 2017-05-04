@@ -14,9 +14,6 @@ angular.module('myApp.home', ['ngRoute'])
 
     .controller('HomeCtrl', function($scope, LocationsService, $http, $filter) {
 
-        /**
-         * Elements that make up the popup.
-         */
         var container = document.getElementById('popup');
         var content = document.getElementById('popup-content');
         var closer = document.getElementById('popup-closer');
@@ -35,13 +32,20 @@ angular.module('myApp.home', ['ngRoute'])
             return false;
         };
 
+        var index = 0;
+
         LocationsService.GetLocations(3, '', '', 477336000, '', '', '', '', '', 'jsono', function(results) {
             loadMap(results);
         });
 
         $scope.fetchVessel = function() {
             var mmsi = parseInt($scope.mmsi);
-            LocationsService.GetLocations(3, '', '', mmsi, '', '', '', '', '', 'jsono', function(results) {
+            if (typeof $scope.days == 'number') {
+              var days = parseInt($scope.days);
+            } else {
+              var days = 3;
+            };
+            LocationsService.GetLocations(days, '', '', mmsi, '', '', '', '', '', 'jsono', function(results) {
                 console.log(results);
                 loadMap(results);
             });
@@ -192,7 +196,7 @@ angular.module('myApp.home', ['ngRoute'])
             });
 
             var clusterWaypoints = new ol.source.Cluster({
-                distance: 40,
+                distance: 40,                                                   // 40 looks ok when clustering
                 source: waypointsSource
             });
 
@@ -219,22 +223,23 @@ angular.module('myApp.home', ['ngRoute'])
             var styleCache = {};
 
             map.getView().setCenter(routeCoordsProps[0].coordinates);
-            map.getView().setZoom(10);
-
-            var ind = 0;
+            map.getView().setZoom(6);
 
             var moveFeature = function(event) {
                 var vectorContext = event.vectorContext;
                 var frameState = event.frameState;
 
                 if (animating) {
+                    console.log(index);
                     var elapsedTime = frameState.time - now;
-                    var index = Math.round(speed * elapsedTime * propertiesArray[ind].speed / 2000);
-                    if (index >= routeLength) {
+                    var speedfactor = parseInt(propertiesArray[index].speed).map(0,550,1,10);    // See the comment in config.js. The speed, is in knots x 10,
+                    index += Math.round((speed*speedfactor));                                    // so it will be a number between 0 and 550 (max knots ever is 55).
+                    console.log(routeLength, index);                                             // So, I am creating a factor, multiply it with the chosen speed, and
+                    if (index >= routeLength) {                                                  // jump these many indices.
+                        index=0;
                         stopAnimation(true);
                         return;
                     };
-                    ind = index;
                     var currentPoint = new ol.geom.Point(routeCoordsProps[index].coordinates);
                     var feature = new ol.Feature(currentPoint);
                     var head = routeCoordsProps[index].properties.heading;
