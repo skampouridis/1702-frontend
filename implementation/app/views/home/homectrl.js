@@ -185,25 +185,25 @@ angular.module('myApp.home', ['ngRoute'])
             map.getView().setCenter(routeCoords[0]);
             map.getView().setZoom(10);
 
+            var ind = 0;
+
             var moveFeature = function(event) {
                 var vectorContext = event.vectorContext;
                 var frameState = event.frameState;
 
                 if (animating) {
                     var elapsedTime = frameState.time - now;
-                    var index = Math.round(speed * elapsedTime / 1000);
-
+                    var index = Math.round(speed * elapsedTime * propertiesArray[ind][0].speed / 2000 );
                     if (index >= routeLength) {
                         stopAnimation(true);
                         return;
-                    }
-
+                    };
+                    ind=index;
+                    console.log('index: ', ind, 'speed: ',propertiesArray[ind][0].speed);
                     var currentPoint = new ol.geom.Point(routeCoords[index]);
                     var feature = new ol.Feature(currentPoint);
-                    console.log(propertiesArray[index][0]);
                     var head = propertiesArray[index][0].heading;
                     styles.geoMarker.getImage().setRotation(head*Math.PI/180);
-                    console.log(head*Math.PI/180);
                     vectorContext.drawFeature(feature, styles.geoMarker);
                 };
                 map.render();
@@ -217,6 +217,7 @@ angular.module('myApp.home', ['ngRoute'])
                     animating = true;
                     now = new Date().getTime();
                     speed = speedInput.value;
+                    console.log(speed);
                     startButton.textContent = 'Cancel Animation';
                     geoMarker.setStyle(null);
                     map.on('postcompose', moveFeature);
