@@ -21,12 +21,12 @@ angular.module('myApp.home', ['ngRoute'])
         });
 
         $scope.fetchVessel = function() {
-          var mmsi = parseInt($scope.mmsi);
-          LocationsService.GetLocations(3, '', '', mmsi, '', '', '', '', '', 'jsono', function(results) {
-              $scope.results = results;
-              console.log(results);
-              loadMap(results);
-          });
+            var mmsi = parseInt($scope.mmsi);
+            LocationsService.GetLocations(3, '', '', mmsi, '', '', '', '', '', 'jsono', function(results) {
+                $scope.results = results;
+                console.log(results);
+                loadMap(results);
+            });
         };
 
         var locations = null;
@@ -87,14 +87,14 @@ angular.module('myApp.home', ['ngRoute'])
                     })
                 }),
                 'icon': new ol.style.Style({
-                  image: new ol.style.Icon({
-                      anchor: [0.5, 1],
-                      scale: 0.2,
-                      anchorXUnits: 'fraction',
-                      anchorYUnits: 'fraction',
-                      opacity: 1,
-                      src: 'img/location1.png'
-                  })
+                    image: new ol.style.Icon({
+                        anchor: [0.5, 1],
+                        scale: 0.2,
+                        anchorXUnits: 'fraction',
+                        anchorYUnits: 'fraction',
+                        opacity: 1,
+                        src: 'img/location1.png'
+                    })
                 })
             };
 
@@ -105,7 +105,7 @@ angular.module('myApp.home', ['ngRoute'])
 
             var vectorLayer = new ol.layer.Vector({
                 source: new ol.source.Vector({
-                    title: 'Some Layer'
+                    title: 'Route Layer'
                 }),
                 style: function(feature) {
                     if (animating && feature.get('type') === 'geoMarker') {
@@ -117,12 +117,64 @@ angular.module('myApp.home', ['ngRoute'])
 
             vectorLayer.getSource().addFeatures([routeFeature, geoMarker, startMarker, endMarker]);
 
-            for (let i = 0; i < locations.length ; i++) {
-              vectorLayer.getSource().addFeatures([new ol.Feature({
-                  type: 'icon',
-                  geometry: new ol.geom.Point(routeCoords[i])
-              })]);
+            // for (let i = 0; i < locations.length ; i++) {
+            //   vectorLayer.getSource().addFeatures([new ol.Feature({
+            //       type: 'icon',
+            //       geometry: new ol.geom.Point(routeCoords[i])
+            //   })]);
+            // };
+
+            var waypoints = new Array(locations.length);
+
+            for (let i = 0; i < locations.length; i++) {
+                waypoints[i] = new ol.Feature({
+                    type: 'icon',
+                    geometry: new ol.geom.Point(routeCoords[i])
+                });
             };
+
+            var waypointsSource = new ol.source.Vector({
+                features: waypoints
+            });
+
+            var clusterWaypoints = new ol.source.Cluster({
+                distance: 40,
+                source: waypointsSource
+            });
+            var styleCache = {};
+            var clusters = new ol.layer.Vector({
+                source: clusterWaypoints,
+                style: function(feature, resolution) {
+                    var size = feature.get('features').length;
+                    var style = styleCache[size];
+                    if (!style) {
+                        style = [new ol.style.Style({
+                            image: new ol.style.Circle({
+                                radius: 10,
+                                stroke: new ol.style.Stroke({
+                                    color: '#fff'
+                                }),
+                                fill: new ol.style.Fill({
+                                    color: '#3399CC'
+                                })
+                            }),
+                            text: new ol.style.Text({
+                                text: size.toString(),
+                                fill: new ol.style.Fill({
+                                    color: '#fff'
+                                })
+                            })
+                        })];
+                        styleCache[size] = style;
+                    }
+                    return style;
+                }
+            });
+
+            // var raw = new ol.layer.Vector({
+            //   source: waypointsSource
+            // });
+
             var map = new ol.Map({
                 target: 'map',
                 view: new ol.View({
@@ -132,7 +184,7 @@ angular.module('myApp.home', ['ngRoute'])
                     maxZoom: 22,
                     projection: 'EPSG:3857'
                 }),
-                layers: [$scope.stamenTiles, vectorLayer]
+                layers: [$scope.stamenTiles, vectorLayer, clusters]
             });
 
             map.getView().setCenter(routeCoords[0]);
