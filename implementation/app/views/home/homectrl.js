@@ -36,22 +36,17 @@ angular.module('myApp.home', ['ngRoute'])
         };
 
         LocationsService.GetLocations(3, '', '', 477336000, '', '', '', '', '', 'jsono', function(results) {
-            $scope.results = results;
-            // console.log(results);
             loadMap(results);
         });
 
         $scope.fetchVessel = function() {
             var mmsi = parseInt($scope.mmsi);
             LocationsService.GetLocations(3, '', '', mmsi, '', '', '', '', '', 'jsono', function(results) {
-                $scope.results = results;
                 console.log(results);
                 loadMap(results);
             });
         };
 
-        var locations = null;
-        var vesselLine = [];
 
         var map = new ol.Map({
             target: 'map',
@@ -66,8 +61,57 @@ angular.module('myApp.home', ['ngRoute'])
             overlays: [overlay]
         });
 
+        var styles = {
+            'route': new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    width: 3,
+                    color: 'rgba(151, 79, 181, 0.79)'
+                })
+            }),
+            'geoMarker': new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 0.5],
+                    scale: 0.2,
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    opacity: 0.9,
+                    src: 'img/vessel.png'
+                })
+            }),
+            'icon': new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 1],
+                    scale: 0.2,
+                    anchorXUnits: 'fraction',
+                    anchorYUnits: 'fraction',
+                    opacity: 1,
+                    src: 'img/location1.png'
+                })
+            })
+        };
+
+        var vectorLayer = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                title: 'Route Layer'
+            })
+        });
+
+        var clusters = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                title: 'Other'
+            })
+        });
+
+        map.addLayer(vectorLayer);
+        map.addLayer(clusters);
+
         function loadMap(data) {
-            locations = data;
+            var locations = data;
+            var vesselLine = [];
+
+            vectorLayer.getSource().clear();
+            clusters.getSource().clear();
+
             var propertiesArray = [];
             for (let i = 0; i < locations.length; i++) {
                 var coords = [];
@@ -119,50 +163,16 @@ angular.module('myApp.home', ['ngRoute'])
                 geometry: new ol.geom.Point(routeCoordsProps[routeLength - 1].coordinates)
             });
 
-            var styles = {
-                'route': new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        width: 3,
-                        color: 'rgba(151, 79, 181, 0.79)'
-                    })
-                }),
-                'geoMarker': new ol.style.Style({
-                    image: new ol.style.Icon({
-                        anchor: [0.5, 0.5],
-                        scale: 0.2,
-                        anchorXUnits: 'fraction',
-                        anchorYUnits: 'fraction',
-                        opacity: 0.9,
-                        src: 'img/vessel.png'
-                    })
-                }),
-                'icon': new ol.style.Style({
-                    image: new ol.style.Icon({
-                        anchor: [0.5, 1],
-                        scale: 0.2,
-                        anchorXUnits: 'fraction',
-                        anchorYUnits: 'fraction',
-                        opacity: 1,
-                        src: 'img/location1.png'
-                    })
-                })
-            };
-
             var animating = false;
             var speed, now;
             var speedInput = document.getElementById('speed');
             var startButton = document.getElementById('start-animation');
 
-            var vectorLayer = new ol.layer.Vector({
-                source: new ol.source.Vector({
-                    title: 'Route Layer'
-                }),
-                style: function(feature) {
-                    if (animating && feature.get('type') === 'geoMarker') {
-                        return null;
-                    }
-                    return styles[feature.get('type')];
+            vectorLayer.setStyle(function(feature) {
+                if (animating && feature.get('type') === 'geoMarker') {
+                    return null;
                 }
+                return styles[feature.get('type')];
             });
 
             vectorLayer.getSource().addFeatures([routeFeature, geoMarker, startMarker, endMarker]);
@@ -185,31 +195,28 @@ angular.module('myApp.home', ['ngRoute'])
                 distance: 40,
                 source: waypointsSource
             });
-            var styleCache = {};
-            var clusters = new ol.layer.Vector({
-                source: clusterWaypoints,
-                style: function(feature, resolution) {
-                    var size = feature.get('features').length;
-                    var style = styleCache[size];
-                    if (!style) {
-                        style = [new ol.style.Style({
-                            image: new ol.style.Icon({
-                                anchor: [0.5, 1],
-                                scale: 1,
-                                anchorXUnits: 'fraction',
-                                anchorYUnits: 'fraction',
-                                opacity: 1,
-                                src: 'img/waypoint.svg'
-                            })
-                        })];
-                        styleCache[size] = style;
-                    }
-                    return style;
+
+            clusters.setSource(clusterWaypoints);
+            clusters.setStyle(function(feature, resolution) {
+                var size = feature.get('features').length;
+                var style = styleCache[size];
+                if (!style) {
+                    style = [new ol.style.Style({
+                        image: new ol.style.Icon({
+                            anchor: [0.5, 1],
+                            scale: 1,
+                            anchorXUnits: 'fraction',
+                            anchorYUnits: 'fraction',
+                            opacity: 1,
+                            src: 'img/waypoint.svg'
+                        })
+                    })];
+                    styleCache[size] = style;
                 }
+                return style;
             });
 
-            map.addLayer(vectorLayer);
-            map.addLayer(clusters);
+            var styleCache = {};
 
             map.getView().setCenter(routeCoordsProps[0].coordinates);
             map.getView().setZoom(10);
@@ -270,18 +277,19 @@ angular.module('myApp.home', ['ngRoute'])
 
             var feature = map.forEachFeatureAtPixel(evt.pixel,
                 function(feature, layer) {
+                  console.log(layer, feature.getProperties());
                     return feature;
                 });
 
             if (feature.getProperties().features) {
                 var vesselProperties = feature.getProperties().features[0].O.properties;
-                content.innerHTML = "<h4>Vessel with ID <b>"+vesselProperties.id+"</b></h4>";
-                content.innerHTML += "<p><b>MMSI: </b>"+vesselProperties.mmsi+"</p>";
-                content.innerHTML += "<p><b>Speed: </b>"+vesselProperties.speed+"</p>";
-                content.innerHTML += "<p><b>Course: </b>"+vesselProperties.course+"</p>";
+                content.innerHTML = "<h4>Vessel with ID <b>" + vesselProperties.id + "</b></h4>";
+                content.innerHTML += "<p><b>MMSI: </b>" + vesselProperties.mmsi + "</p>";
+                content.innerHTML += "<p><b>Speed: </b>" + vesselProperties.speed + "</p>";
+                content.innerHTML += "<p><b>Course: </b>" + vesselProperties.course + "</p>";
                 var timestamp = Date.parse(vesselProperties.time);
-                var time= $filter('date')(timestamp, "yyyy-MM-dd @ HH:mm:ss 'GMT'Z");
-                content.innerHTML += "<p><b>Timestamp: </b>"+time+"</p>";
+                var time = $filter('date')(timestamp, "yyyy-MM-dd @ HH:mm:ss 'GMT'Z");
+                content.innerHTML += "<p><b>Timestamp: </b>" + time + "</p>";
                 overlay.setPosition(coordinate);
             } else {
 
