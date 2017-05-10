@@ -1,0 +1,208 @@
+
+
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <div id="nav" class="navbar navbar-inverse navbar-static-top" role="navigation">
+
+            <div class="home-box col-xs-12 col-sm-12">
+                <div>
+                    <img src="images/photo.jpg" alt="Marine Traffic image">
+                    <h3 class="white-font">Tracking App</h3>
+                </div>
+            </div>
+            <!-- Actions -->
+            <div class="home-box col-xs-12 col-sm-12 padding-L-R-15px margin-top-28px">
+                <!-- Select days -->
+                <div class="margin-bottom-30px text-align-center">
+                    <label>Days</label>
+                    <select ng-model="selectDaysModel"
+                            ng-disabled="loadingVesselTrackingData || tripStarted"
+                            ng-change="selectDays.change()"
+                            ng-options="day.id as day.name for day in selectDays.list"
+                            class="days-select-style"
+                            ng-class="loadingVesselTrackingData?'opacity-dot-4':''">
+                        <option value=""></option>
+                    </select>
+                </div>
+                <!-- Select MMSI -->
+                <div class="margin-bottom-30px text-align-center">
+                    <label>MMSI</label>
+                    <select ng-model="selectMMSIModel"
+                            ng-disabled="loadingVesselTrackingData || tripStarted"
+                            ng-change="selectMMSI.change()"
+                            ng-options="m.id as m.mmsi for m in selectMMSI.list"
+                            class="days-select-style"
+                            ng-class="loadingVesselTrackingData?'opacity-dot-4':''">
+                    </select>
+                </div>
+                <!-- Buttons -->
+                <div class="margin-bottom-30px text-align-center">
+                    <!--&lt;!&ndash; Add markers &ndash;&gt;-->
+                    <!--<div class="row no-padding-L-R"-->
+                         <!--ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">-->
+                        <!--<div class="col-xs-12 col-sm-9 no-padding-right">-->
+                            <!--<button class="action-buttons-style width-100per"-->
+                                    <!--ng-disabled="vesselTrack.list.length==0"-->
+                                    <!--ng-click="addMarkersTMap()">Add markers-->
+                            <!--</button>-->
+                        <!--</div>-->
+
+                        <!--<div class="col-xs-12 col-sm-3 no-padding-left">-->
+                            <!--<button class="action-buttons-style width-100per red-background"-->
+                                    <!--ng-disabled="vesselTrack.list.length==0"-->
+                                    <!--ng-click="removeMarkers()">-->
+                                <!--<i class="fa fa-times"></i>-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<br>-->
+                    <!--&lt;!&ndash; Add path &ndash;&gt;-->
+                    <!--<div class="row no-padding-L-R"-->
+                         <!--ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">-->
+                        <!--<div class="col-xs-12 col-sm-9 no-padding-right">-->
+                            <!--<button class="action-buttons-style width-100per"-->
+                                    <!--ng-disabled="vesselTrack.list.length==0"-->
+                                    <!--ng-click="addPathToMap()">Add path-->
+                            <!--</button>-->
+                        <!--</div>-->
+
+                        <!--<div class="col-xs-12 col-sm-3 no-padding-left">-->
+                            <!--<button class="action-buttons-style width-100per red-background"-->
+                                    <!--ng-disabled="vesselTrack.list.length==0"-->
+                                    <!--ng-click="removePath()">-->
+                                <!--<i class="fa fa-times"></i>-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <!-- Animation speed -->
+                    <div class="row no-padding-L-R"
+                        ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData || tripStarted)?'no-pointer-events opacity-dot-4':''">
+                        <!-- Start trip -->
+                        <h4 class="animation-title">Vessel Speed (x)</h4>
+                        <div class="col-xs-12 col-sm-12">
+                            <rzslider rz-slider-model="animationStep"
+                                      rz-slider-options="slider.options"
+                                      disabled="tripStarted">
+                            </rzslider>
+                            Skip data also:
+                            <input type="checkbox" ng-model="slider.options.skipDataAlso">
+                        </div>
+                    </div>
+
+                    <br>
+                    <!-- Start, Stop trip -->
+                    <div class="row no-padding-L-R"
+                         ng-class="(vesselTrack.list.length==0 || loadingVesselTrackingData)?'opacity-dot-4':''">
+                        <!-- Start trip -->
+                        <h4 class="animation-title">Trip Animation</h4>
+                        <div class="col-xs-12 col-sm-3 col-sm-offset-1 no-padding-right">
+                            <button class="action-buttons-style width-100per"
+                                    ng-class="vesselTrack.list.length==0 || tripStarted?'opacity-dot-4':''"
+                                    ng-disabled="vesselTrack.list.length==0 || tripStarted"
+                                    ng-click="startTrip()">
+                                <i class="fa fa-play" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <!-- Pause trip -->
+                        <div class="col-xs-12 col-sm-3 no-padding-right">
+                            <button class="action-buttons-style width-100per"
+                                    ng-class="!tripStarted?'opacity-dot-4':''"
+                                    ng-disabled="vesselTrack.list.length==0 || !tripStarted"
+                                    ng-click="pauseTrip()">
+                                <i class="fa fa-pause" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <!-- Stop trip -->
+                        <div class="col-xs-12 col-sm-3 no-padding-right">
+                            <button class="action-buttons-style width-100per"
+                                    ng-class="!tripStarted?'opacity-dot-4':''"
+                                    ng-disabled="vesselTrack.list.length==0 || !tripStarted"
+                                    ng-click="cancelTrip()">
+                                <i class="fa fa-stop" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div ng-if="tripStarted" class="row no-padding-L-R">
+                        <span id="percentage">{{getPercentage()}}%</span>
+                    </div>
+                   
+                </div>
+            </div>
+
+
+
+            <div class="social">
+                <ul>
+                    <li>
+                        <a href="https://github.com/christos-dimizas/1702-frontend" target="_blank">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://gr.linkedin.com/in/christos-dimizas-baa88348" target="_blank">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-content-wrapper" class="light-gray-background container padding-top-15px">
+        <div class="page-content ui-view-container">
+            <div class="well no-padding">
+                <!--<section id="landingPage" class="margin-top-28px">-->
+                    <div class=" no-padding-L-R home-background container">
+                        <div class="row padding-L-R-20px black-font ">
+                        <div class="row padding-L-R-20px black-font ">
+                        <div class="row padding-L-R-20px black-font ">
+                            <div class="col-xs-12 col-sm-12 ">
+                                <h4 class="height-30px">
+                                    Tracking information&nbsp;
+                                    <span ng-if="loadingVesselTrackingData"><i class="fa fa-spinner  fa-spin"></i></span>
+                                    <span ng-if="vesselTrack.shipId && !loadingVesselTrackingData">
+                                        -&nbsp;Ship id: {{vesselTrack.shipId}}
+                                    </span>
+                                </h4>
+                                <!--LeafletJS-->
+                                <leaflet paths="leafletObj.path"
+                                         markers="leafletObj.markers"
+                                         lf-center="leafletObj.center"
+                                         bounds="leafletObj.bounds"
+                                         defaults="leafletObj.defaults"
+                                         layers="leafletObj.layers"
+                                         width="100%"
+                                         height="500px">
+                                </leaflet>
+                                <span>Next Marker after: {{timeInterval}} seconds</span>
+                            </div>
+                        </div>
+                    </div>
+                <!--</section>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!------ LANDING PAGE --------------------------->
+
